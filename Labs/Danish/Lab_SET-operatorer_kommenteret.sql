@@ -169,9 +169,6 @@ UNION SELECT 10;
 SELECT n
 FROM (VALUES(1),(2),(3),(4),(5),(6),(7),(8),(9),(10)) AS Nums(n);
 
-*/
-
-
 
 
 /* ***********************
@@ -309,12 +306,11 @@ Opgave 5: Skriv en forespørgsel som finder distinkte brugere i StackOverflow
  , som har givet mindst 1000 DownVotes og mindst 10000 UpVotes. 
 - Tabeller involveret: dbo.Users
 - Ønsket output: 
-     Id	DisplayName
-    -1	Community
-    476	deceze
+    Id	    DisplayName
+    -1	    Community
+    476	    deceze
     1288	Bill the Lizard
     3043	Joel Coehoorn
-    4279	jfs
     ... (79 rows)
 */
 
