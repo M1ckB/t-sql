@@ -281,12 +281,12 @@ Opgave 4: Skriv en forespørgsel som finder distinkte brugere i StackOverflow
  , som har givet DownVotes, men ingen UpVotes. 
 - Tabeller involveret: dbo.Users
 - Ønsket output: 
-    Id	    DisplayName
-    211	    jhornnes
-    15299	user15299
-    17020	Matt
-    17060	user17060
-    ... (495 rows)
+Id	  DisplayName
+211	  jhornnes
+15299	user15299
+17020	Matt
+17060	user17060
+... (495 rows)
 */
 
 SELECT Id,DisplayName
@@ -306,12 +306,12 @@ Opgave 5: Skriv en forespørgsel som finder distinkte brugere i StackOverflow
  , som har givet mindst 1000 DownVotes og mindst 10000 UpVotes. 
 - Tabeller involveret: dbo.Users
 - Ønsket output: 
-    Id	    DisplayName
-    -1	    Community
-    476	    deceze
-    1288	Bill the Lizard
-    3043	Joel Coehoorn
-    ... (79 rows)
+Id	  DisplayName
+-1	  Community
+476	  deceze
+1288	Bill the Lizard
+3043	Joel Coehoorn
+... (79 rows)
 */
 
 SELECT Id,DisplayName
