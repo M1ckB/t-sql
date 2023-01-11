@@ -50,7 +50,8 @@ CREATE TABLE TabelA (
 
 INSERT INTO TabelA (Id, TabelB_Id)
 VALUES
-(1, 5), (2,6);
+(1, 5), 
+(2, 6);
 
 CREATE TABLE TabelB (
   Id int NOT NULL,
