@@ -152,10 +152,10 @@ Introduktion til familier af window-funktioner:
 
 Der findes forskellige familier af window-funktioner:
 
-- Ranking
-- Offset
-- Aggregering
-- (Statistik)
+- Ranking (læs mere: https://learn.microsoft.com/en-us/sql/t-sql/functions/ranking-functions-transact-sql?view=sql-server-ver16)
+- Offset (læs mere: https://learn.microsoft.com/en-us/sql/t-sql/functions/analytic-functions-transact-sql?view=sql-server-ver16)
+- Aggregering (læs mere: https://learn.microsoft.com/en-us/sql/t-sql/functions/aggregate-functions-transact-sql?view=sql-server-ver16)
+- (Statistik) (læs mere: https://learn.microsoft.com/en-us/sql/t-sql/functions/analytic-functions-transact-sql?view=sql-server-ver16)
 
 */
 
