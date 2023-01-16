@@ -1,6 +1,5 @@
 /* ***********************
 
-Kursus: SQL Basis 2
 Emne: Window-funktioner
 Version: 1.0
 Dato: 2023-01-11
@@ -46,16 +45,211 @@ Introduktion til window-funktioner:
 
 /* [Mockup] */
 
+CREATE TABLE TabelA (
+    Id int NOT NULL,
+    Dato date NOT NULL,
+    Kategori nvarchar(100) NOT NULL,
+    Værdi int NULL
+);
+
+INSERT INTO TabelA (Id, Dato, Kategori, Værdi)
+VALUES
+(1, '20220101', 'A', 22), (2, '20000504', 'A', 5), (3, '20150205', 'A', 0),
+(4, '20101203', 'B', 14), (5, '20050824', 'B', 100), (6, '20220930', 'B', 79), (7, '20220315', 'B', 44), (8, '20210710', 'B', 66),
+(9, '20221224', 'C', 1), (10, '20221231', 'C', 112);
+
+SELECT
+    Kategori,
+    Dato,
+    Værdi
+FROM TabelA
+ORDER BY Kategori, Dato;
+
+SELECT
+    Kategori,
+    SUM(Værdi) AS Total_Værdi
+FROM TabelA
+GROUP BY Kategori
+ORDER BY Kategori;
+
+SELECT
+    Kategori,
+    Dato,
+    Værdi,
+    SUM(Værdi) OVER (PARTITION BY Kategori) AS Total_Værdi
+FROM TabelA
+ORDER BY Kategori, Dato;
+
+SELECT
+    Kategori,
+    Dato,
+    Værdi,
+    SUM(Værdi) OVER (
+        PARTITION BY Kategori
+        ORDER BY Dato
+        /*ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW*/
+    ) AS Total_Værdi
+FROM TabelA
+ORDER BY Kategori, Dato;
+
+DROP TABLE TabelA;
+
 /* [Stack Overflow] */
+
+SELECT
+    OwnerUserId,
+    CreationDate,
+    Id,
+    Title,
+    FavoriteCount
+FROM dbo.Posts
+WHERE PostTypeId = 1 -- Question
+AND OwnerUserId IN (14388, 279932, 59711)
+ORDER BY OwnerUserId, CreationDate;
+
+SELECT
+    OwnerUserId,
+    SUM(FavoriteCount) AS Total_FavoriteCount
+FROM dbo.Posts
+WHERE PostTypeId = 1 -- Question
+AND OwnerUserId IN (14388, 279932, 59711)
+GROUP BY OwnerUserId
+ORDER BY OwnerUserId;
+
+SELECT
+    OwnerUserId,
+    CreationDate,
+    FavoriteCount,
+    SUM(FavoriteCount) OVER (PARTITION BY OwnerUserId) AS Total_FavoriteCount
+FROM dbo.Posts
+WHERE PostTypeId = 1 -- Question
+    AND OwnerUserId IN (14388, 279932, 59711)
+ORDER BY OwnerUserId, CreationDate;
+
+SELECT
+    OwnerUserId,
+    CreationDate,
+    FavoriteCount,
+    SUM(FavoriteCount) OVER (
+        PARTITION BY OwnerUserId
+        ORDER BY CreationDate
+        /*ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW*/
+    ) AS RunningTotal_FavoriteCount
+FROM dbo.Posts
+WHERE PostTypeId = 1 -- Question
+    AND OwnerUserId IN (14388, 279932, 59711)
+ORDER BY OwnerUserId, CreationDate;
+
+/* [I opgaverne skal man lave beregner a la eksemplerne, men uden brug af window-funktioner. Det skal
+    gerne understrege hvor elegante og hurtige window-funktioner er] */
 
 /*
 
-Opgave X:
+Opgave 1: Beregn for hver bruger, begrænset til brugerne 14388, 279932, 59711, de enkelte spørgsmåls
+    andel af den samlede FavoriteCount uden brug af window-funktioner? 
 
-- Tabeller involveret:  
-- Ønsket output:        
+- Tabeller involveret:  dbo.Posts
+- Ønsket output:        OwnerUserId, CreationDate, FavoriteCount, Pct_FavoriteCount (beregnet)
 
 */
+
+/* [Man kan benytte sig af både et self join, en correlated subquery og en CTE] */
+
+SELECT
+    p1.OwnerUserId,
+    p1.CreationDate,
+    p1.FavoriteCount,
+    1.0 * p1.FavoriteCount / SUM(p2.FavoriteCount) AS Pct_FavoriteCount
+FROM dbo.Posts AS p1
+INNER JOIN dbo.Posts AS p2
+    ON p2.OwnerUserId = p1.OwnerUserId
+    AND p2.PostTypeId = p1.PostTypeId
+WHERE p1.PostTypeId = 1 -- Question
+    AND p1.OwnerUserId IN (14388, 279932, 59711)
+GROUP BY p1.OwnerUserId, p1.CreationDate, p1.FavoriteCount
+ORDER BY OwnerUserId, CreationDate;
+
+SELECT
+    p1.OwnerUserId,
+    p1.CreationDate,
+    p1.FavoriteCount,
+    1.0 * p1.FavoriteCount / 
+    (
+        SELECT
+            SUM(p2.FavoriteCount)
+        FROM dbo.Posts AS p2
+        WHERE p2.PostTypeId = p1.PostTypeId
+            AND p2.OwnerUserId = p1.OwnerUserId
+    ) AS Pct_FavoriteCount
+FROM dbo.Posts AS p1
+WHERE p1.PostTypeId = 1 -- Question
+AND p1.OwnerUserId IN (14388, 279932, 59711)
+ORDER BY OwnerUserId, CreationDate;
+
+WITH Total_FavoriteCount AS (
+    SELECT
+        OwnerUserId,
+        SUM(FavoriteCount) AS Total_FavoriteCount
+    FROM dbo.Posts
+    WHERE PostTypeId = 1 -- Question
+    GROUP BY OwnerUserId
+)
+
+SELECT
+    p1.OwnerUserId,
+    p1.CreationDate,
+    p1.FavoriteCount,
+    1.0 * p1.FavoriteCount / p2.Total_FavoriteCount AS Pct_FavoriteCount
+FROM dbo.Posts AS p1
+INNER JOIN Total_FavoriteCount AS p2
+    ON p2.OwnerUserId = p1.OwnerUserId
+WHERE p1.PostTypeId = 1 -- Question
+    AND p1.OwnerUserId IN (14388, 279932, 59711)
+ORDER BY OwnerUserId, CreationDate;
+
+/*
+
+Opgave 2: Beregn en kumulativ sum af FavoriteCount for spørgsmål stillet af brugerne 14388, 279932, 59711
+    uden brug af window-funktioner? 
+
+- Tabeller involveret:  dbo.Posts
+- Ønsket output:        OwnerUserId, CreationDate, FavoriteCount, RunningTotal_FavoriteCount (beregnet)
+
+*/
+
+/* [Man kan benytte sig af både et self join og en correlated subquery] */
+
+SELECT
+    p1.OwnerUserId,
+    p1.CreationDate,
+    p1.FavoriteCount,
+    SUM(p2.FavoriteCount) AS RunningTotal_FavoriteCount
+FROM dbo.Posts AS p1
+INNER JOIN dbo.Posts AS p2
+    ON p2.OwnerUserId = p1.OwnerUserId
+    AND p2.PostTypeId = p1.PostTypeId
+    AND p2.CreationDate <= p1.CreationDate
+WHERE p1.PostTypeId = 1 -- Question
+    AND p1.OwnerUserId IN (14388, 279932, 59711)
+GROUP BY p1.OwnerUserId, p1.CreationDate, p1.FavoriteCount
+ORDER BY OwnerUserId, CreationDate;
+
+SELECT
+    p1.OwnerUserId,
+    p1.CreationDate,
+    p1.FavoriteCount,
+    (
+        SELECT
+            SUM(p2.FavoriteCount)
+        FROM dbo.Posts AS p2
+        WHERE p2.PostTypeId = p1.PostTypeId
+            AND p2.OwnerUserId = p1.OwnerUserId
+            AND p2.CreationDate <= p1.CreationDate
+    ) AS RunningTotal_FavoriteCount
+FROM dbo.Posts AS p1
+WHERE p1.PostTypeId = 1 -- Question
+AND p1.OwnerUserId IN (14388, 279932, 59711)
+ORDER BY OwnerUserId, CreationDate;
 
 /* ***********************
 
@@ -74,7 +268,7 @@ SELECT
 
 OVER-delsætningen giver følgende muligheder for at specificere vinduet:
 
-- Partitioning: Bruges til at opdele forespørgslen i grupper, eller vinduer, som beregningen foretages for.
+- Partitioning: Bruges til at opdele forespørgslen i grupper som beregningen foretages for.
     Hvis ikke denne angives, så laves beregningen for hele forespørgslen
 - Ordering: Bruges til at bestemme ordenen som rækker evalueres i inden for en window-frame
 - Framing: Bruges til udvælge en delmængde af rækker inden for en window-partiton
@@ -197,15 +391,6 @@ Window-funktioner kan bruges til at løse mange forskellige typer af opgaver. Ne
 /* [Mockup] */
 
 /* [Stack Overflow] */
-
-/*
-
-Opgave X:
-
-- Tabeller involveret:  
-- Ønsket output:        
-
-*/
 
 /* ***********************
 

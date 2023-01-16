@@ -1,6 +1,5 @@
 /* ***********************
 
-Kursus: SQL Basis 2
 Emne: Joins
 Version: 1.1
 Dato: 2023-01-08
