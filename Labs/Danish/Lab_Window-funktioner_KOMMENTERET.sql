@@ -148,7 +148,7 @@ Opgave 1: Beregn for hver bruger, begrænset til brugerne 14388, 279932, 59711, 
     andel af den samlede FavoriteCount (a la eksemplet) uden brug af window-funktioner? 
 
 - Tabeller involveret:  dbo.Posts
-- Ønsket output:        OwnerUserId, CreationDate, FavoriteCount, Pct_FavoriteCount (beregnet)
+- Ønsket output:        Id, OwnerUserId, CreationDate, FavoriteCount, Pct_FavoriteCount (beregnet)
 
 */
 
@@ -212,11 +212,11 @@ ORDER BY OwnerUserId, CreationDate, Id;
 
 /*
 
-Opgave 2: Beregn en rank for FavoriteCount for spørgsmål stillet af brugerne 14388, 279932, 59711 (a la eksemplet)
-    uden brug af window-funktioner? 
+Opgave 2: Rank FavoriteCount fra største til mindste for spørgsmål stillet af brugerne 14388, 279932, 59711
+    (a la eksemplet) uden brug af window-funktioner? 
 
 - Tabeller involveret:  dbo.Posts
-- Ønsket output:        OwnerUserId, CreationDate, FavoriteCount, Rank_FavoriteCount (beregnet)
+- Ønsket output:        Id, OwnerUserId, FavoriteCount, Rank_FavoriteCount (beregnet)
 
 */
 
