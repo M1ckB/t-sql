@@ -702,30 +702,75 @@ ORDER BY Reputation;
 
 /*
 
-Opgave 4: Find 
+Opgave 4: Dan et rækkenummer for spørgsmål lavet af bruger 214. Rækkenummeret skal
+    være sorteret efter antal visninger og dernæst oprettelsestidspunktet.
 
-- Tabeller involveret:  
-- Ønsket output:        
+- Tabeller involveret:  dbo.Posts
+- Ønsket output:        Id, OwnerUserId, Title, ViewCount, CreationDate, Rownum (beregnet)
 
 */
+
+SELECT
+    Id,
+    OwnerUserId,
+    Title,
+    ViewCount,
+    CreationDate,
+    ROW_NUMBER() OVER(ORDER BY ViewCount, CreationDate) AS Rownum
+FROM dbo.Posts
+WHERE PostTypeId = 1 -- Question
+AND OwnerUserId = 214
+ORDER BY ViewCount, CreationDate;
 
 /*
 
-Opgave 5: 
+Opgave 5: Beregn forskellen i antal visninger mellem et aktuelt spørgsmål
+    og spørgsmålet før for bruger 214. Såfremt der ikke er et tidligere
+    spørgsmål, så fratrækkes 0.
 
-- Tabeller involveret:  
-- Ønsket output:        
+- Tabeller involveret:  dbo.Posts
+- Ønsket output:        Id, OwnerUserId, Title, CreationDate, ViewCount, DiffViewCount (beregnet)    
 
 */
+
+SELECT
+    Id,
+    OwnerUserId,
+    Title,
+    CreationDate,
+    ViewCount,
+    ViewCount - LAG(ViewCount, 1, 0) OVER(ORDER BY CreationDate) AS DiffViewCount
+FROM dbo.Posts
+WHERE PostTypeId = 1 -- Question
+AND OwnerUserId = 214
+ORDER BY CreationDate;
 
 /*
 
-Opgave 6: 
+Opgave 6: Beregn for hvert år en kumuleret sum af antal visninger
+    baseret på oprettelsestidspunkt for spørgsmål lavet af bruger 214.
 
-- Tabeller involveret:  
-- Ønsket output:        
+- Tabeller involveret:  dbo.Posts
+- Ønsket output:        Id, OwnerUserId, CreationYear (beregnet), CreationDate,
+                        ViewCount, RunningTotalViewCount (beregnet)
 
 */
+
+SELECT
+    Id,
+    OwnerUserId,
+    YEAR(CreationDate) AS CreationYear,
+    CreationDate,
+    ViewCount,
+    SUM(ViewCount) OVER (
+        PARTITION BY YEAR(CreationDate)
+        ORDER BY CreationDate
+        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) AS RunningTotalViewCount
+FROM dbo.Posts
+WHERE PostTypeId = 1 -- Question
+AND OwnerUserId = 214
+ORDER BY CreationDate;
 
 /* ***********************
 
