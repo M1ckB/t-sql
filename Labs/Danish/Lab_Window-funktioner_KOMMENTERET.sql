@@ -55,15 +55,12 @@ CREATE TABLE TabelA (
 INSERT INTO TabelA (Id, Dato, Kategori, Værdi)
 VALUES
 (1, '20220101', 'A', 22), (2, '20000504', 'A', 5), (3, '20150205', 'A', 0),
-(4, '20101203', 'B', 14), (5, '20050824', 'B', 100), (6, '20220930', 'B', 79), (7, '20220315', 'B', 44), (8, '20210710', 'B', 66),
-(9, '20221224', 'C', 1), (10, '20221231', 'C', 112);
+(4, '20101203', 'B', 14), (5, '20050824', 'B', 100), (6, '20220930', 'B', 79), (7, '20220315', 'B', 43), (8, '20210710', 'B', 43),
+(9, '20000504', 'C', 1), (10, '20221231', 'C', 112);
 
 SELECT
-    Kategori,
-    Dato,
-    Værdi
-FROM TabelA
-ORDER BY Kategori, Dato;
+    *
+FROM TabelA;
 
 SELECT
     Kategori,
@@ -73,39 +70,40 @@ GROUP BY Kategori
 ORDER BY Kategori;
 
 SELECT
-    Kategori,
+    Id,
     Dato,
+    Kategori,
     Værdi,
-    SUM(Værdi) OVER (PARTITION BY Kategori) AS Total_Værdi
+    SUM(Værdi) OVER (PARTITION BY Kategori) AS Total_Værdi,
+    1.0 * Værdi / SUM(Værdi) OVER (PARTITION BY Kategori) AS Pct_Værdi
 FROM TabelA
-ORDER BY Kategori, Dato;
+ORDER BY Kategori, Dato, Id;
 
 SELECT
+    Id,
     Kategori,
-    Dato,
     Værdi,
-    SUM(Værdi) OVER (
+    RANK() OVER (
         PARTITION BY Kategori
-        ORDER BY Dato
-        /*ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW*/
-    ) AS Total_Værdi
+        ORDER BY Værdi DESC
+    ) AS Rank_Værdi
 FROM TabelA
-ORDER BY Kategori, Dato;
+ORDER BY Kategori, Værdi DESC;
 
 DROP TABLE TabelA;
 
 /* [Stack Overflow] */
 
 SELECT
-    OwnerUserId,
-    CreationDate,
     Id,
+    CreationDate,
+    OwnerUserId,
     Title,
     FavoriteCount
 FROM dbo.Posts
 WHERE PostTypeId = 1 -- Question
 AND OwnerUserId IN (14388, 279932, 59711)
-ORDER BY OwnerUserId, CreationDate;
+ORDER BY OwnerUserId, CreationDate, Id;
 
 SELECT
     OwnerUserId,
@@ -117,36 +115,37 @@ GROUP BY OwnerUserId
 ORDER BY OwnerUserId;
 
 SELECT
+    Id,
     OwnerUserId,
     CreationDate,
     FavoriteCount,
-    SUM(FavoriteCount) OVER (PARTITION BY OwnerUserId) AS Total_FavoriteCount
+    SUM(FavoriteCount) OVER (PARTITION BY OwnerUserId) AS Total_FavoriteCount,
+    1.0 * FavoriteCount / SUM(FavoriteCount) OVER (PARTITION BY OwnerUserId) AS Pct_FavoriteCount    
 FROM dbo.Posts
 WHERE PostTypeId = 1 -- Question
     AND OwnerUserId IN (14388, 279932, 59711)
-ORDER BY OwnerUserId, CreationDate;
+ORDER BY OwnerUserId, CreationDate, Id;
 
 SELECT
+    Id,
     OwnerUserId,
-    CreationDate,
     FavoriteCount,
-    SUM(FavoriteCount) OVER (
+    RANK() OVER (
         PARTITION BY OwnerUserId
-        ORDER BY CreationDate
-        /*ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW*/
-    ) AS RunningTotal_FavoriteCount
+        ORDER BY FavoriteCount DESC
+    ) AS Rank_FavoriteCount
 FROM dbo.Posts
 WHERE PostTypeId = 1 -- Question
     AND OwnerUserId IN (14388, 279932, 59711)
-ORDER BY OwnerUserId, CreationDate;
+ORDER BY OwnerUserId, FavoriteCount DESC;
 
-/* [I opgaverne skal man lave beregner a la eksemplerne, men uden brug af window-funktioner. Det skal
-    gerne understrege hvor elegante og hurtige window-funktioner er] */
+/* [I opgaverne skal man lave beregninger a la eksemplerne, men uden brug af window-funktioner. Det skal
+    gerne illustrere hvor elegante og hurtige window-funktioner er] */
 
 /*
 
 Opgave 1: Beregn for hver bruger, begrænset til brugerne 14388, 279932, 59711, de enkelte spørgsmåls
-    andel af den samlede FavoriteCount uden brug af window-funktioner? 
+    andel af den samlede FavoriteCount (a la eksemplet) uden brug af window-funktioner? 
 
 - Tabeller involveret:  dbo.Posts
 - Ønsket output:        OwnerUserId, CreationDate, FavoriteCount, Pct_FavoriteCount (beregnet)
@@ -156,6 +155,7 @@ Opgave 1: Beregn for hver bruger, begrænset til brugerne 14388, 279932, 59711, 
 /* [Man kan benytte sig af både et self join, en correlated subquery og en CTE] */
 
 SELECT
+    p1.Id,
     p1.OwnerUserId,
     p1.CreationDate,
     p1.FavoriteCount,
@@ -166,10 +166,11 @@ INNER JOIN dbo.Posts AS p2
     AND p2.PostTypeId = p1.PostTypeId
 WHERE p1.PostTypeId = 1 -- Question
     AND p1.OwnerUserId IN (14388, 279932, 59711)
-GROUP BY p1.OwnerUserId, p1.CreationDate, p1.FavoriteCount
-ORDER BY OwnerUserId, CreationDate;
+GROUP BY p1.Id, p1.OwnerUserId, p1.CreationDate, p1.FavoriteCount
+ORDER BY OwnerUserId, CreationDate, Id;
 
 SELECT
+    p1.Id,
     p1.OwnerUserId,
     p1.CreationDate,
     p1.FavoriteCount,
@@ -184,72 +185,74 @@ SELECT
 FROM dbo.Posts AS p1
 WHERE p1.PostTypeId = 1 -- Question
 AND p1.OwnerUserId IN (14388, 279932, 59711)
-ORDER BY OwnerUserId, CreationDate;
+ORDER BY OwnerUserId, CreationDate, Id;
 
 WITH Total_FavoriteCount AS (
     SELECT
+        PostTypeId,
         OwnerUserId,
         SUM(FavoriteCount) AS Total_FavoriteCount
     FROM dbo.Posts
-    WHERE PostTypeId = 1 -- Question
-    GROUP BY OwnerUserId
+    GROUP BY PostTypeId, OwnerUserId
 )
 
 SELECT
+    p1.Id,
     p1.OwnerUserId,
     p1.CreationDate,
     p1.FavoriteCount,
     1.0 * p1.FavoriteCount / p2.Total_FavoriteCount AS Pct_FavoriteCount
 FROM dbo.Posts AS p1
 INNER JOIN Total_FavoriteCount AS p2
-    ON p2.OwnerUserId = p1.OwnerUserId
+    ON p2.PostTypeId = p1.PostTypeId
+    AND p2.OwnerUserId = p1.OwnerUserId
 WHERE p1.PostTypeId = 1 -- Question
     AND p1.OwnerUserId IN (14388, 279932, 59711)
-ORDER BY OwnerUserId, CreationDate;
+ORDER BY OwnerUserId, CreationDate, Id;
 
 /*
 
-Opgave 2: Beregn en kumulativ sum af FavoriteCount for spørgsmål stillet af brugerne 14388, 279932, 59711
+Opgave 2: Beregn en rank for FavoriteCount for spørgsmål stillet af brugerne 14388, 279932, 59711 (a la eksemplet)
     uden brug af window-funktioner? 
 
 - Tabeller involveret:  dbo.Posts
-- Ønsket output:        OwnerUserId, CreationDate, FavoriteCount, RunningTotal_FavoriteCount (beregnet)
+- Ønsket output:        OwnerUserId, CreationDate, FavoriteCount, Rank_FavoriteCount (beregnet)
 
 */
 
-/* [Man kan benytte sig af både et self join og en correlated subquery] */
+/* [Man kan benytte sig af både et self join og en correlated subquery, sidstnævnte er den mest oplagte] */
 
 SELECT
+    p1.Id,
     p1.OwnerUserId,
-    p1.CreationDate,
     p1.FavoriteCount,
-    SUM(p2.FavoriteCount) AS RunningTotal_FavoriteCount
+    1 + COUNT(p2.Id) AS Rank_FavoriteCount
 FROM dbo.Posts AS p1
-INNER JOIN dbo.Posts AS p2
+LEFT OUTER JOIN dbo.Posts AS p2
     ON p2.OwnerUserId = p1.OwnerUserId
     AND p2.PostTypeId = p1.PostTypeId
-    AND p2.CreationDate <= p1.CreationDate
+    AND p2.FavoriteCount > p1.FavoriteCount
 WHERE p1.PostTypeId = 1 -- Question
     AND p1.OwnerUserId IN (14388, 279932, 59711)
-GROUP BY p1.OwnerUserId, p1.CreationDate, p1.FavoriteCount
-ORDER BY OwnerUserId, CreationDate;
+GROUP BY p1.Id, p1.OwnerUserId, p1.FavoriteCount
+ORDER BY OwnerUserId, FavoriteCount DESC;
 
 SELECT
+    p1.Id,
     p1.OwnerUserId,
-    p1.CreationDate,
     p1.FavoriteCount,
     (
         SELECT
-            SUM(p2.FavoriteCount)
+            COUNT(*) AS Rank_FavoriteCount
         FROM dbo.Posts AS p2
         WHERE p2.PostTypeId = p1.PostTypeId
             AND p2.OwnerUserId = p1.OwnerUserId
-            AND p2.CreationDate <= p1.CreationDate
-    ) AS RunningTotal_FavoriteCount
+            AND p2.FavoriteCount > p1.FavoriteCount
+    ) + 1 AS Rank_FavoriteCount
 FROM dbo.Posts AS p1
 WHERE p1.PostTypeId = 1 -- Question
 AND p1.OwnerUserId IN (14388, 279932, 59711)
-ORDER BY OwnerUserId, CreationDate;
+ORDER BY OwnerUserId, FavoriteCount DESC;
 
 /* ***********************
 
