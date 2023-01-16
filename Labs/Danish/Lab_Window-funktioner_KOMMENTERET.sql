@@ -13,7 +13,6 @@ Agenda:
 
 - Introduktion til konceptet om window-funktioner, deres opbygning og delsætninger
 - Introduktion til forskellige familier af window-funktioner
-- Eksempler på løsningsmønstre med window-funktioner
 
 Læs mere om window funktioner i Microsofts T-SQL reference:
 
@@ -55,7 +54,7 @@ CREATE TABLE TabelA (
 INSERT INTO TabelA (Id, Dato, Kategori, Værdi)
 VALUES
 (1, '20220101', 'A', 22), (2, '20000504', 'A', 5), (3, '20150205', 'A', 0),
-(4, '20101203', 'B', 14), (5, '20050824', 'B', 100), (6, '20220930', 'B', 79), (7, '20220315', 'B', 43), (8, '20210710', 'B', 43),
+(4, '20101203', 'B', 14), (5, '20050824', 'B', 79), (6, '20220930', 'B', 100), (7, '20220315', 'B', 43), (8, '20210710', 'B', 43),
 (9, '20000504', 'C', 1), (10, '20221231', 'C', 112);
 
 SELECT
@@ -284,16 +283,103 @@ Bemærk, at ikke alle muligheder kan tages i brug for alle funktioner.
 
 /* [Mockup] */
 
+CREATE TABLE TabelA (
+    Id int NOT NULL,
+    Dato date NOT NULL,
+    Kategori nvarchar(100) NOT NULL,
+    Værdi int NULL
+);
+
+INSERT INTO TabelA (Id, Dato, Kategori, Værdi)
+VALUES
+(1, '20220101', 'A', 22), (2, '20000504', 'A', 5), (3, '20150205', 'A', 0),
+(4, '20101203', 'B', 14), (5, '20050824', 'B', 79), (6, '20220930', 'B', 100), (7, '20220315', 'B', 43), (8, '20210710', 'B', 43),
+(9, '20000504', 'C', 1), (10, '20221231', 'C', 112);
+
+SELECT
+    *
+FROM TabelA;
+
+SELECT
+    Id,
+    Kategori,
+    Dato,
+    Værdi,
+    ROW_NUMBER() OVER (
+        PARTITION BY Kategori
+        ORDER BY Dato, Id
+        --ORDER BY Dato DESC, Id DESC
+    ) AS Nr
+FROM TabelA
+ORDER BY Kategori, Dato, Id;
+
+SELECT
+    Id,
+    Kategori,
+    Dato,
+    Værdi,
+    SUM(Værdi) OVER (
+        PARTITION BY Kategori
+        ORDER BY Dato, Id
+        /*RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW*/
+        --ROWS BETWEEN 2 PRECEDING AND CURRENT ROW
+    ) AS LøbendeTotal_Værdi
+FROM TabelA
+ORDER BY Kategori, Dato, Id;
+
+DROP TABLE TabelA;
+
 /* [Stack Overflow] */
+
+SELECT
+    Id,
+    OwnerUserId,
+    CreationDate,
+    ROW_NUMBER() OVER (
+        PARTITION BY OwnerUserId
+        ORDER BY CreationDate, Id
+        --ORDER BY CreationDate DESC, Id DESC
+    ) AS Num
+FROM dbo.Posts
+WHERE PostTypeId = 1 -- Question
+    AND OwnerUserId IN (14388, 279932, 59711)
+ORDER BY OwnerUserId, CreationDate, Id;
+
+SELECT
+    Id,
+    OwnerUserId,
+    CreationDate,
+    FavoriteCount,
+    SUM(FavoriteCount) OVER (
+        PARTITION BY OwnerUserId
+        ORDER BY CreationDate, Id
+        /*RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW*/
+        --ROWS BETWEEN 2 PRECEDING AND CURRENT ROW        
+    ) AS RunningTotal_FavoriteCount 
+FROM dbo.Posts
+WHERE PostTypeId = 1 -- Question
+    AND OwnerUserId IN (14388, 279932, 59711)
+ORDER BY OwnerUserId, CreationDate, Id;
 
 /*
 
-Opgave X:
+Opgave 3: Rank omdømme fra størst til lavest for brugere fra Danmark ('Denmark').
 
-- Tabeller involveret:  
-- Ønsket output:        
+- Tabeller involveret:  dbo.Users
+- Ønsket output:        Id, DisplayName, CreationDate, Reputation, Rank_Reputation (beregnet)
 
 */
+
+/* [Opgaven skal henlede opmærksomheden på konsekvensen af at udelade en window-partition] */
+
+SELECT
+    Id,
+    DisplayName,
+    CreationDate,
+    Reputation,
+    RANK() OVER(ORDER BY Reputation DESC) AS Rank_Reputation
+FROM dbo.Users
+WHERE [Location] = 'Denmark';
 
 /* ***********************
 
@@ -320,28 +406,78 @@ Hvis vi ønsker at bruge window-funktioner i andre delsætninger, så bliver vi 
 
 */
 
-/* [
-    - Med udgangspunkt i det samme eksempel flyttes window-funktionen til forskellige delsætninger for at
-        undersøge hvor den virker
-    - Vis eksempel på hvordan tolkningen af window-funktioner ikke er entydig hvis den blev evalueret logisk
-        i en anden fase
-    - Vis eksempel på window-funktioner og samspillet med DISTINCT
-    - Vis eksempel på hvordan window-funktioner alligevel kan tages i brug i andre delsætninger, fx via
-        en CTE
-    ] */
+/* [I stedet for opgaver, så laves der en demo af pointerne hvor der spørges ud i plenum løbende] */
 
 /* [Mockup] */
 
-/* [Stack Overflow] */
+CREATE TABLE TabelA (
+    Id int NOT NULL,
+    Kolonne date NOT NULL
+);
 
-/*
+INSERT INTO TabelA (Id, Kolonne)
+VALUES
+(1, '20220502'), (2, '20220314'), (3, '20230101'), (4, '20220314'), (5, '20220630');
 
-Opgave X:
+SELECT
+    *
+FROM TabelA;
 
-- Tabeller involveret:  
-- Ønsket output:        
+/* [Med udgangspunkt i det samme eksempel flyttes window-funktionen til forskellige delsætninger for at
+    undersøge hvor den virker] */
 
-*/
+SELECT
+    Id,
+    Kolonne,
+    ROW_NUMBER() OVER (ORDER BY Kolonne, Id) AS Nr
+FROM TabelA
+--WHERE ROW_NUMBER() OVER (ORDER BY Kolonne, Id) = 1
+--ORDER BY ROW_NUMBER() OVER (ORDER BY Kolonne, Id)
+;
+
+/* [Vis eksempel på hvordan tolkningen af window-funktioner ikke er entydig hvis den blev evalueret logisk
+    i en anden fase] */
+
+/* Et tænkt eksempel: Hvad vil forespørgslen nedenfor returnere? 3 eller 3 og 5? */
+
+SELECT
+    Id
+FROM TabelA
+WHERE Kolonne > '20220501'
+    AND ROW_NUMBER() OVER (ORDER BY Kolonne, Id) > 2
+--WHERE ROW_NUMBER() OVER (ORDER BY Kolonne, Id) > 2
+--    AND Kolonne > '20220501'
+;
+
+/* [Vis eksempel på window-funktioner og samspillet med DISTINCT] */
+
+/* Kan du gætte resultatet af nedenstående query? */
+
+SELECT DISTINCT
+    Kolonne,
+    ROW_NUMBER() OVER(ORDER BY Kolonne) AS Nr
+FROM TabelA
+ORDER BY Kolonne;
+
+/* [Vis eksempel på hvordan window-funktioner alligevel kan tages i brug i andre delsætninger, fx via
+    en CTE] */
+
+/* Hvordan kan vi komme uden om begrænsingen forårsaget af den logiske query processering? */
+
+WITH CTE AS (
+    SELECT
+        Id,
+        Kolonne,
+        ROW_NUMBER() OVER(ORDER BY Kolonne, Id) AS Nr
+    FROM TabelA
+)
+
+SELECT
+    *
+FROM CTE
+WHERE Nr > 2;
+
+DROP TABLE TabelA;
 
 /* ***********************
 
@@ -352,7 +488,7 @@ Der findes forskellige familier af window-funktioner:
 - Ranking (læs mere: https://learn.microsoft.com/en-us/sql/t-sql/functions/ranking-functions-transact-sql?view=sql-server-ver16)
 - Offset (læs mere: https://learn.microsoft.com/en-us/sql/t-sql/functions/analytic-functions-transact-sql?view=sql-server-ver16)
 - Aggregering (læs mere: https://learn.microsoft.com/en-us/sql/t-sql/functions/aggregate-functions-transact-sql?view=sql-server-ver16)
-- (Statistik) (læs mere: https://learn.microsoft.com/en-us/sql/t-sql/functions/analytic-functions-transact-sql?view=sql-server-ver16)
+- (Statistik)
 
 */
 
@@ -365,35 +501,231 @@ Der findes forskellige familier af window-funktioner:
 
 /* [Mockup] */
 
+CREATE TABLE TabelA (
+    Id int NOT NULL,
+    Dato date NOT NULL,
+    Kategori nvarchar(100) NOT NULL,
+    Værdi int NULL
+);
+
+INSERT INTO TabelA (Id, Dato, Kategori, Værdi)
+VALUES
+(1, '20220101', 'A', 22), (2, '20000504', 'A', 5), (3, '20150205', 'A', 0),
+(4, '20101203', 'B', 14), (5, '20050824', 'B', 79), (6, '20220930', 'B', 100), (7, '20220315', 'B', 43), (8, '20210710', 'B', 43),
+(9, '20000504', 'C', 1), (10, '20221231', 'C', 112);
+
+SELECT
+    *
+FROM TabelA;
+
+/* Ranking: */
+
+SELECT
+    Id,
+    Dato,
+    Kategori,
+    Værdi,
+    ROW_NUMBER() OVER(
+        PARTITION BY Kategori
+        ORDER BY Værdi
+    ) AS RækkeNr,
+    RANK() OVER(
+        PARTITION BY Kategori
+        ORDER BY Værdi
+    ) AS Rank,
+    DENSE_RANK() OVER(
+        PARTITION BY Kategori
+        ORDER BY Værdi
+    ) AS DenseRank,
+    NTILE(2) OVER(
+        PARTITION BY Kategori
+        ORDER BY Værdi
+    ) AS NTile
+FROM TabelA
+ORDER BY Kategori, Værdi;
+
+/* Offset: */
+
+SELECT
+    Id,
+    Dato,
+    Kategori,
+    Værdi,
+    LAG(Værdi/*, 1, NULL*/) OVER(
+        PARTITION BY Kategori
+        ORDER BY Værdi
+    ) AS TidligereVærdi,
+    LEAD(Værdi/*, 1, NULL*/) OVER(
+        PARTITION BY Kategori
+        ORDER BY Værdi
+    ) AS NæsteVærdi,
+    FIRST_VALUE(Værdi) OVER(
+        PARTITION BY Kategori
+        ORDER BY Værdi
+        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) AS FørsteVærdi,
+    LAST_VALUE(Værdi) OVER(
+        PARTITION BY Kategori
+        ORDER BY Værdi
+        ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING
+    ) AS SidsteVærdi
+FROM TabelA
+ORDER BY Kategori, Værdi;
+
+/* Aggregering: */
+
+SELECT
+    Id,
+    Dato,
+    Kategori,
+    Værdi,
+    COUNT(*) OVER(
+        PARTITION BY Kategori
+        /*ORDER BY Værdi
+        RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW*/
+    ) AS Antal,
+    MIN(Værdi) OVER(
+        PARTITION BY Kategori
+        ORDER BY Værdi
+    ) AS MindsteVærdi,
+    MAX(Værdi) OVER(
+        PARTITION BY Kategori
+        /*ORDER BY Værdi
+        RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW*/
+    ) AS MaxVærdi,
+    SUM(Værdi) OVER(
+        PARTITION BY Kategori
+        /*ORDER BY Værdi
+        RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW*/
+    ) AS SumVærdi
+FROM TabelA
+ORDER BY Kategori, Værdi;
+
+DROP TABLE TabelA;
+
 /* [Stack Overflow] */
+
+/* Ranking: */
+
+SELECT
+    Id,
+    DisplayName,
+    [Location],
+    Reputation,
+    ROW_NUMBER() OVER(
+        ORDER BY Reputation
+    ) AS RækkeNr,
+    RANK() OVER(
+        ORDER BY Reputation
+    ) AS Rank,
+    DENSE_RANK() OVER(
+        ORDER BY Reputation
+    ) AS DenseRank,
+    NTILE(2) OVER(
+        ORDER BY Reputation
+    ) AS NTile
+FROM dbo.Users
+WHERE [Location] = 'Denmark'
+ORDER BY Reputation;
+
+/* Offset: */
+
+SELECT
+    Id,
+    DisplayName,
+    [Location],
+    Reputation,
+    ROW_NUMBER() OVER(
+        ORDER BY Reputation
+    ) AS RækkeNr,
+    RANK() OVER(
+        ORDER BY Reputation
+    ) AS Rank,
+    DENSE_RANK() OVER(
+        ORDER BY Reputation
+    ) AS DenseRank,
+    NTILE(2) OVER(
+        ORDER BY Reputation
+    ) AS NTile
+FROM dbo.Users
+WHERE [Location] = 'Denmark'
+ORDER BY Reputation;
+
+SELECT
+    Id,
+    DisplayName,
+    [Location],
+    Reputation,
+    LAG(Reputation/*, 1, NULL*/) OVER(
+        ORDER BY Reputation
+    ) AS TidligereVærdi,
+    LEAD(Reputation/*, 1, NULL*/) OVER(
+        ORDER BY Reputation
+    ) AS NæsteVærdi,
+    FIRST_VALUE(Reputation) OVER(
+        ORDER BY Reputation
+        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) AS FørsteVærdi,
+    LAST_VALUE(Reputation) OVER(
+        ORDER BY Reputation
+        ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING
+    ) AS SidsteVærdi
+FROM dbo.Users
+WHERE [Location] = 'Denmark'
+ORDER BY Reputation;
+
+/* Aggregering: */
+
+SELECT
+    Id,
+    DisplayName,
+    [Location],
+    Reputation,
+    COUNT(*) OVER(
+        /*ORDER BY Reputation
+        RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW*/
+    ) AS Antal,
+    MIN(Reputation) OVER(
+        ORDER BY Reputation
+    ) AS MindsteVærdi,
+    MAX(Reputation) OVER(
+        /*ORDER BY Reputation
+        RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW*/
+    ) AS MaxVærdi,
+    SUM(Reputation) OVER(
+        /*ORDER BY Reputation
+        RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW*/
+    ) AS SumVærdi
+FROM dbo.Users
+WHERE [Location] = 'Denmark'
+ORDER BY Reputation;
 
 /*
 
-Opgave X:
+Opgave 4: Find 
 
 - Tabeller involveret:  
 - Ønsket output:        
 
 */
 
-/* ***********************
+/*
 
-Løsningsmønstre med window-funktioner:
+Opgave 5: 
 
-Window-funktioner kan bruges til at løse mange forskellige typer af opgaver. Nedenfor er gennemgået et par
-    eksempler til løsning af klassiske udfordringer:
-
-- TOP N per gruppe
-- Kumulative værdier
-- Huller og øer
+- Tabeller involveret:  
+- Ønsket output:        
 
 */
 
-/* [Kommentar] */
+/*
 
-/* [Mockup] */
+Opgave 6: 
 
-/* [Stack Overflow] */
+- Tabeller involveret:  
+- Ønsket output:        
+
+*/
 
 /* ***********************
 
