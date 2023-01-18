@@ -3,11 +3,11 @@
 ## Emne 1: Joins og set operators
 
 - [x] Joins (Mick)
-- [ ] `UNION`, `INTERSECT`, `EXCEPT` (Thomas)
+- [X] `UNION`, `INTERSECT`, `EXCEPT` (Thomas)
 
 ## Emne 2: Window functions
 
-- [ ] Window functions (Mick)
+- [X] Window functions (Mick)
 - [ ] `PIVOT` og `UNPIVOT` (Thomas)
 
 ## Emne 3: Table Expressions
