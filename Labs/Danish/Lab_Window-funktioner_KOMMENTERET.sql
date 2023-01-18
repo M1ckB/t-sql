@@ -147,8 +147,13 @@ Opgave 1: Beregn for hver bruger, begrænset til brugerne 14388, 279932, 59711, 
     andel af den samlede FavoriteCount (a la eksemplet) uden brug af window-funktioner? 
 
 - Tabeller involveret:  dbo.Posts
-- Ønsket output:        Id, OwnerUserId, CreationDate, FavoriteCount, Pct_FavoriteCount (beregnet)
-
+- Ønsket output:
+Id	    OwnerUserId	CreationDate	        FavoriteCount	Pct_FavoriteCount
+388242	14388	    2008-12-23 05.23.56.063	9086	        1.000000000000
+487258	59711	    2009-01-28 11.10.32.043	3662	        0.906884596334
+577659	59711	    2009-02-23 13.37.45.853	20	            0.004952947003
+...
+(11 rows)
 */
 
 /* [Man kan benytte sig af både et self join, en correlated subquery og en CTE] */
@@ -215,8 +220,13 @@ Opgave 2: Rank FavoriteCount fra største til mindste for spørgsmål stillet af
     (a la eksemplet) uden brug af window-funktioner? 
 
 - Tabeller involveret:  dbo.Posts
-- Ønsket output:        Id, OwnerUserId, FavoriteCount, Rank_FavoriteCount (beregnet)
-
+- Ønsket output:
+Id	    OwnerUserId	FavoriteCount	Rank_FavoriteCount
+388242	14388	    9086	        1
+487258	59711	    3662	        1
+730620	59711	    324	            2
+...
+(11 rows)
 */
 
 /* [Man kan benytte sig af både et self join og en correlated subquery, sidstnævnte er den mest oplagte] */
@@ -366,8 +376,13 @@ ORDER BY OwnerUserId, CreationDate, Id;
 Opgave 3: Rank omdømme fra størst til lavest for brugere fra Danmark ('Denmark').
 
 - Tabeller involveret:  dbo.Users
-- Ønsket output:        Id, DisplayName, CreationDate, Reputation, Rank_Reputation (beregnet)
-
+- Ønsket output:
+Id	    DisplayName	            CreationDate	        Reputation	Rank_Reputation
+61974	Mark Byers	            2009-02-03 14.56.00.380	563558	    1
+13627	driis	                2008-09-16 20.16.07.617	118224	    2
+218589	Klaus Byskov Pedersen	2009-11-25 13.19.42.430	79949	    3
+...
+(2.462 rows)
 */
 
 /* [Opgaven skal henlede opmærksomheden på konsekvensen af at udelade en window-partition] */
@@ -706,8 +721,13 @@ Opgave 4: Dan et rækkenummer for spørgsmål lavet af bruger 214. Rækkenummere
     være sorteret efter antal visninger og dernæst oprettelsestidspunktet.
 
 - Tabeller involveret:  dbo.Posts
-- Ønsket output:        Id, OwnerUserId, Title, ViewCount, CreationDate, Rownum (beregnet)
-
+- Ønsket output:
+Id	    OwnerUserId	Title	                                            ViewCount	CreationDate	        Rownum
+7610390	214	        Deriving a random long value from random integers	42	        2011-09-30 12.30.47.453	1
+9175497	214	        Redundancy in web API	                            88	        2012-02-07 11.33.20.793	2
+8098868	214	        ? extends TSubject extends Subject - Not type ...	112	        2011-11-11 19.22.41.780	3
+...
+(44 rows)
 */
 
 SELECT
@@ -729,8 +749,13 @@ Opgave 5: Beregn forskellen i antal visninger mellem et aktuelt spørgsmål
     spørgsmål, så fratrækkes 0.
 
 - Tabeller involveret:  dbo.Posts
-- Ønsket output:        Id, OwnerUserId, Title, CreationDate, ViewCount, DiffViewCount (beregnet)    
-
+- Ønsket output:
+Id	    OwnerUserId	Title	                            CreationDate	        ViewCount	DiffViewCount
+761	    214	        Localising date format descriptors	2008-08-03 17.30.20.473	633	        633
+12271	214	        Creating Visual Studio templates...	2008-08-15 14.04.01.017	270	        -363
+190915	214	        Using tables in UDF's in Excel 2007	2008-10-10 11.35.22.773	870	        600
+...
+(44 rows)
 */
 
 SELECT
@@ -751,9 +776,13 @@ Opgave 6: Beregn for hvert år en kumuleret sum af antal visninger
     baseret på oprettelsestidspunkt for spørgsmål lavet af bruger 214.
 
 - Tabeller involveret:  dbo.Posts
-- Ønsket output:        Id, OwnerUserId, CreationYear (beregnet), CreationDate,
-                        ViewCount, RunningTotalViewCount (beregnet)
-
+- Ønsket output:
+Id	    OwnerUserId	CreationYear	CreationDate	        ViewCount	RunningTotalViewCount
+761	    214	        2008	        2008-08-03 17.30.20.473	633	        633
+12271	214	        2008	        2008-08-15 14.04.01.017	270	        903
+190915	214	        2008	        2008-10-10 11.35.22.773	870	        1773
+...
+(44 rows)
 */
 
 SELECT

@@ -200,8 +200,13 @@ Opgave 1: Hvilke spørgsmål kan vi besvare med denne type af join?
 Opgave 2: Lav en query som returnerer alle kombinationer af indlægs- og stemmetyper.
 
 - Tabeller involveret:  dbo.PostTypes, dbo.VoteTypes
-- Ønsket output:        Type, Name
-
+- Ønsket output:
+Type      Name
+Question	AcceptedByOriginator
+Question	UpMod
+Question	DownMod
+...
+(120 rows)
 */
 
 SELECT
@@ -301,8 +306,13 @@ AND q.Tags LIKE '%<sql>%<inner-join>%';
 Opgave 3: Returner brugere fra USA og deres indlæg.
 
 - Tabeller involveret:  dbo.Users, dbo.Posts
-- Ønsket output:        Id (dbo.Users), Displayname, Location, PostTypeId, CreationDate
-
+- Ønsket output:
+Id      Displayname       Location  PostTypeId  CreationDate
+65393	  Instance Hunter	  USA       2	          2009-02-12 12.51.08.890
+65393	  Instance Hunter	  USA	      1           2009-02-13 13.49.09.740
+65393	  Instance Hunter	  USA	      2           2009-02-16 20.35.06.343
+...
+(196.184 rows)
 */
 
 /* [Bemærk at brugere fra USA uden indlæg ikke indgår] */
@@ -341,8 +351,13 @@ AND u.[Location] = 'USA';
 Opgave 5: Returner unikke brugere som har fået badget "Teacher", sorteret aftagende på baggrund af omdømme.
 
 - Tabeller involveret:  dbo.Badges, dbo.Users
-- Ønsket output:        Id (dbo.Users), Displayname, Reputation
-
+- Ønsket output:
+Id	    DisplayName	    Reputation
+22656	  Jon Skeet	      1047863
+157882	BalusC	        818687
+29407	  Darin Dimitrov	814505
+...
+(535.840 rows)
 */
 
 /* [Tag diskussion op omkring hvad der bør listes som join-betingelse og hvad der bør placeres i WHERE-
@@ -455,8 +470,13 @@ AND q.Tags LIKE '%<sql>%<inner-join>%';
 Opgave 6: Returner brugere fra USA og deres indlæg, inklusiv brugere som ingen indlæg har lavet.
 
 - Tabeller involveret:  dbo.Users, dbo.Posts
-- Ønsket output:        Id (dbo.Users), Displayname, Location, PostTypeId, CreationDate
-
+- Ønsket output:
+Id	  DisplayName	    Location	PostTypeId	CreationDate
+65393	Instance Hunter	USA	      1	          2009-03-04 03.09.41.437
+65393	Instance Hunter	USA	      2	          2009-03-04 03.33.02.627
+76840	aikeru	        USA	      1	          2009-03-11 19.14.55.487
+...
+(25.348 rows)
 */
 
 SELECT
@@ -475,8 +495,13 @@ WHERE u.[Location] = 'USA';
 Opgave 7: Returner brugere som ingen indlæg har lavet.
 
 - Tabeller involveret:  dbo.Users, dbo.Posts
-- Ønsket output:        Id (dbo.Users), Displayname, Reputation
-
+- Ønsket output:
+Id	    DisplayName	            Reputation
+2901047	user2901047	            1
+2474029	user2474029	            1
+2740827	Said Falukatif Bakalli	1
+...
+(1.030.987 rows)
 */
 
 SELECT

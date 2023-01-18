@@ -332,7 +332,7 @@ Hovedpointer:
 - Rækkefølgen af kolonner er vigtig, så undlad SELECT * ...!
 - De tre SET-operatorer i T-SQL:
   - UNION (og UNION ALL): Konkatenerer resultat-tabellerne med distinkte (og ikke-distinkte) rækker
-  - INTERCEPT: Findeer distinkte rækker som findes i begge resultat-tabeller
+  - INTERCEPT: Finder distinkte rækker som findes i begge resultat-tabeller
   - EXCEPT:  Finder distinkte rækker i venstre resultat-tabel som ikke findes i højre resultat-tabel
 - Stærke til fx konkatenering af tabellers indhold og til at finde forskelle mellem tabellers indhold.
 - Når der er flere SET-operationer i en forespørgsel, så evealueres de fra venstre mod højre.
