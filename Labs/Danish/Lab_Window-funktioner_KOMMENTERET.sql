@@ -44,52 +44,53 @@ Introduktion til window-funktioner:
 
 /* [Mockup] */
 
-CREATE TABLE TabelA (
+CREATE TABLE #TableA (
     Id int NOT NULL,
-    Dato date NOT NULL,
-    Kategori nvarchar(100) NOT NULL,
-    Værdi int NULL
+    Dat date NOT NULL,
+    Cat nvarchar(100) NOT NULL,
+    Val int NULL
 );
 
-INSERT INTO TabelA (Id, Dato, Kategori, Værdi)
+INSERT INTO #TableA (Id, Dat, Cat, Val)
 VALUES
 (1, '20220101', 'A', 22), (2, '20000504', 'A', 5), (3, '20150205', 'A', 0),
-(4, '20101203', 'B', 14), (5, '20050824', 'B', 79), (6, '20220930', 'B', 100), (7, '20220315', 'B', 43), (8, '20210710', 'B', 43),
-(9, '20000504', 'C', 1), (10, '20221231', 'C', 112);
+(4, '20101203', 'B', 14), (5, '20050824', 'B', 79), (6, '20220930', 'B', 100),
+(7, '20220315', 'B', 43), (8, '20210710', 'B', 43), (9, '20000504', 'C', 1),
+(10, '20221231', 'C', 112);
 
 SELECT
     *
-FROM TabelA;
+FROM #TableA;
 
 SELECT
-    Kategori,
-    SUM(Værdi) AS Total_Værdi
-FROM TabelA
-GROUP BY Kategori
-ORDER BY Kategori;
-
-SELECT
-    Id,
-    Dato,
-    Kategori,
-    Værdi,
-    SUM(Værdi) OVER (PARTITION BY Kategori) AS Total_Værdi,
-    1.0 * Værdi / SUM(Værdi) OVER (PARTITION BY Kategori) AS Pct_Værdi
-FROM TabelA
-ORDER BY Kategori, Dato, Id;
+    Cat,
+    SUM(Val) AS TotalVal
+FROM #TableA
+GROUP BY Cat
+ORDER BY Cat;
 
 SELECT
     Id,
-    Kategori,
-    Værdi,
+    Dat,
+    Cat,
+    Val,
+    SUM(Val) OVER (PARTITION BY Cat) AS TotalVal,
+    1.0 * Val / SUM(Val) OVER (PARTITION BY Cat) AS PctVal
+FROM #TableA
+ORDER BY Cat, Dat, Id;
+
+SELECT
+    Id,
+    Cat,
+    Val,
     RANK() OVER (
-        PARTITION BY Kategori
-        ORDER BY Værdi DESC
-    ) AS Rank_Værdi
-FROM TabelA
-ORDER BY Kategori, Værdi DESC;
+        PARTITION BY Cat
+        ORDER BY Val DESC
+    ) AS RankVal
+FROM #TableA
+ORDER BY Cat, Val DESC;
 
-DROP TABLE TabelA;
+DROP TABLE #TableA;
 
 /* [Stack Overflow] */
 
@@ -106,7 +107,7 @@ ORDER BY OwnerUserId, CreationDate, Id;
 
 SELECT
     OwnerUserId,
-    SUM(FavoriteCount) AS Total_FavoriteCount
+    SUM(FavoriteCount) AS TotalFavoriteCount
 FROM dbo.Posts
 WHERE PostTypeId = 1 -- Question
 AND OwnerUserId IN (14388, 279932, 59711)
@@ -118,8 +119,8 @@ SELECT
     OwnerUserId,
     CreationDate,
     FavoriteCount,
-    SUM(FavoriteCount) OVER (PARTITION BY OwnerUserId) AS Total_FavoriteCount,
-    1.0 * FavoriteCount / SUM(FavoriteCount) OVER (PARTITION BY OwnerUserId) AS Pct_FavoriteCount    
+    SUM(FavoriteCount) OVER (PARTITION BY OwnerUserId) AS TotalFavoriteCount,
+    1.0 * FavoriteCount / SUM(FavoriteCount) OVER (PARTITION BY OwnerUserId) AS PctFavoriteCount    
 FROM dbo.Posts
 WHERE PostTypeId = 1 -- Question
     AND OwnerUserId IN (14388, 279932, 59711)
@@ -132,7 +133,7 @@ SELECT
     RANK() OVER (
         PARTITION BY OwnerUserId
         ORDER BY FavoriteCount DESC
-    ) AS Rank_FavoriteCount
+    ) AS RankFavoriteCount
 FROM dbo.Posts
 WHERE PostTypeId = 1 -- Question
     AND OwnerUserId IN (14388, 279932, 59711)
@@ -148,7 +149,7 @@ Opgave 1: Beregn for hver bruger, begrænset til brugerne 14388, 279932, 59711, 
 
 - Tabeller involveret:  dbo.Posts
 - Ønsket output:
-Id	    OwnerUserId	CreationDate	        FavoriteCount	Pct_FavoriteCount
+Id	    OwnerUserId	CreationDate	        FavoriteCount	PctFavoriteCount
 388242	14388	    2008-12-23 05.23.56.063	9086	        1.000000000000
 487258	59711	    2009-01-28 11.10.32.043	3662	        0.906884596334
 577659	59711	    2009-02-23 13.37.45.853	20	            0.004952947003
@@ -163,7 +164,7 @@ SELECT
     p1.OwnerUserId,
     p1.CreationDate,
     p1.FavoriteCount,
-    1.0 * p1.FavoriteCount / SUM(p2.FavoriteCount) AS Pct_FavoriteCount
+    1.0 * p1.FavoriteCount / SUM(p2.FavoriteCount) AS PctFavoriteCount
 FROM dbo.Posts AS p1
 INNER JOIN dbo.Posts AS p2
     ON p2.OwnerUserId = p1.OwnerUserId
@@ -185,7 +186,7 @@ SELECT
         FROM dbo.Posts AS p2
         WHERE p2.PostTypeId = p1.PostTypeId
             AND p2.OwnerUserId = p1.OwnerUserId
-    ) AS Pct_FavoriteCount
+    ) AS PctFavoriteCount
 FROM dbo.Posts AS p1
 WHERE p1.PostTypeId = 1 -- Question
 AND p1.OwnerUserId IN (14388, 279932, 59711)
@@ -195,7 +196,7 @@ WITH Total_FavoriteCount AS (
     SELECT
         PostTypeId,
         OwnerUserId,
-        SUM(FavoriteCount) AS Total_FavoriteCount
+        SUM(FavoriteCount) AS TotalFavoriteCount
     FROM dbo.Posts
     GROUP BY PostTypeId, OwnerUserId
 )
@@ -205,7 +206,7 @@ SELECT
     p1.OwnerUserId,
     p1.CreationDate,
     p1.FavoriteCount,
-    1.0 * p1.FavoriteCount / p2.Total_FavoriteCount AS Pct_FavoriteCount
+    1.0 * p1.FavoriteCount / p2.TotalFavoriteCount AS PctFavoriteCount
 FROM dbo.Posts AS p1
 INNER JOIN Total_FavoriteCount AS p2
     ON p2.PostTypeId = p1.PostTypeId
@@ -235,7 +236,7 @@ SELECT
     p1.Id,
     p1.OwnerUserId,
     p1.FavoriteCount,
-    1 + COUNT(p2.Id) AS Rank_FavoriteCount
+    1 + COUNT(p2.Id) AS RankFavoriteCount
 FROM dbo.Posts AS p1
 LEFT OUTER JOIN dbo.Posts AS p2
     ON p2.OwnerUserId = p1.OwnerUserId
@@ -252,12 +253,12 @@ SELECT
     p1.FavoriteCount,
     (
         SELECT
-            COUNT(*) AS Rank_FavoriteCount
+            COUNT(*) AS RankFavoriteCount
         FROM dbo.Posts AS p2
         WHERE p2.PostTypeId = p1.PostTypeId
             AND p2.OwnerUserId = p1.OwnerUserId
             AND p2.FavoriteCount > p1.FavoriteCount
-    ) + 1 AS Rank_FavoriteCount
+    ) + 1 AS RankFavoriteCount
 FROM dbo.Posts AS p1
 WHERE p1.PostTypeId = 1 -- Question
 AND p1.OwnerUserId IN (14388, 279932, 59711)
@@ -293,51 +294,52 @@ Bemærk, at ikke alle muligheder kan tages i brug for alle funktioner.
 
 /* [Mockup] */
 
-CREATE TABLE TabelA (
+CREATE TABLE #TableA (
     Id int NOT NULL,
-    Dato date NOT NULL,
-    Kategori nvarchar(100) NOT NULL,
-    Værdi int NULL
+    Dat date NOT NULL,
+    Cat nvarchar(100) NOT NULL,
+    Val int NULL
 );
 
-INSERT INTO TabelA (Id, Dato, Kategori, Værdi)
+INSERT INTO #TableA (Id, Dat, Cat, Val)
 VALUES
 (1, '20220101', 'A', 22), (2, '20000504', 'A', 5), (3, '20150205', 'A', 0),
-(4, '20101203', 'B', 14), (5, '20050824', 'B', 79), (6, '20220930', 'B', 100), (7, '20220315', 'B', 43), (8, '20210710', 'B', 43),
-(9, '20000504', 'C', 1), (10, '20221231', 'C', 112);
+(4, '20101203', 'B', 14), (5, '20050824', 'B', 79), (6, '20220930', 'B', 100),
+(7, '20220315', 'B', 43), (8, '20210710', 'B', 43), (9, '20000504', 'C', 1),
+(10, '20221231', 'C', 112);
 
 SELECT
     *
-FROM TabelA;
+FROM #TableA;
 
 SELECT
     Id,
-    Kategori,
-    Dato,
-    Værdi,
+    Cat,
+    Dat,
+    Val,
     ROW_NUMBER() OVER (
-        PARTITION BY Kategori
-        ORDER BY Dato, Id
-        --ORDER BY Dato DESC, Id DESC
-    ) AS Nr
-FROM TabelA
-ORDER BY Kategori, Dato, Id;
+        PARTITION BY Cat
+        ORDER BY Dat, Id
+        --ORDER BY Dat DESC, Id DESC
+    ) AS RowNum
+FROM #TableA
+ORDER BY Cat, Dat, Id;
 
 SELECT
     Id,
-    Kategori,
-    Dato,
-    Værdi,
-    SUM(Værdi) OVER (
-        PARTITION BY Kategori
-        ORDER BY Dato, Id
+    Cat,
+    Dat,
+    Val,
+    SUM(Val) OVER (
+        PARTITION BY Cat
+        ORDER BY Dat, Id
         /*RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW*/
         --ROWS BETWEEN 2 PRECEDING AND CURRENT ROW
-    ) AS LøbendeTotal_Værdi
-FROM TabelA
-ORDER BY Kategori, Dato, Id;
+    ) AS RunningTotalVal
+FROM #TableA
+ORDER BY Cat, Dat, Id;
 
-DROP TABLE TabelA;
+DROP TABLE #TableA;
 
 /* [Stack Overflow] */
 
@@ -349,7 +351,7 @@ SELECT
         PARTITION BY OwnerUserId
         ORDER BY CreationDate, Id
         --ORDER BY CreationDate DESC, Id DESC
-    ) AS Num
+    ) AS RowNum
 FROM dbo.Posts
 WHERE PostTypeId = 1 -- Question
     AND OwnerUserId IN (14388, 279932, 59711)
@@ -365,7 +367,7 @@ SELECT
         ORDER BY CreationDate, Id
         /*RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW*/
         --ROWS BETWEEN 2 PRECEDING AND CURRENT ROW        
-    ) AS RunningTotal_FavoriteCount 
+    ) AS RunningTotalFavoriteCount 
 FROM dbo.Posts
 WHERE PostTypeId = 1 -- Question
     AND OwnerUserId IN (14388, 279932, 59711)
@@ -377,7 +379,7 @@ Opgave 3: Rank omdømme fra størst til lavest for brugere fra Danmark ('Denmark
 
 - Tabeller involveret:  dbo.Users
 - Ønsket output:
-Id	    DisplayName	            CreationDate	        Reputation	Rank_Reputation
+Id	    DisplayName	            CreationDate	        Reputation	RankReputation
 61974	Mark Byers	            2009-02-03 14.56.00.380	563558	    1
 13627	driis	                2008-09-16 20.16.07.617	118224	    2
 218589	Klaus Byskov Pedersen	2009-11-25 13.19.42.430	79949	    3
@@ -392,7 +394,7 @@ SELECT
     DisplayName,
     CreationDate,
     Reputation,
-    RANK() OVER(ORDER BY Reputation DESC) AS Rank_Reputation
+    RANK() OVER(ORDER BY Reputation DESC) AS RankReputation
 FROM dbo.Users
 WHERE [Location] = 'Denmark';
 
@@ -425,29 +427,29 @@ Hvis vi ønsker at bruge window-funktioner i andre delsætninger, så bliver vi 
 
 /* [Mockup] */
 
-CREATE TABLE TabelA (
+CREATE TABLE #TableA (
     Id int NOT NULL,
-    Kolonne date NOT NULL
+    Col date NOT NULL
 );
 
-INSERT INTO TabelA (Id, Kolonne)
+INSERT INTO #TableA (Id, Col)
 VALUES
 (1, '20220502'), (2, '20220314'), (3, '20230101'), (4, '20220314'), (5, '20220630');
 
 SELECT
     *
-FROM TabelA;
+FROM #TableA;
 
 /* [Med udgangspunkt i det samme eksempel flyttes window-funktionen til forskellige delsætninger for at
     undersøge hvor den virker] */
 
 SELECT
     Id,
-    Kolonne,
-    ROW_NUMBER() OVER (ORDER BY Kolonne, Id) AS Nr
-FROM TabelA
---WHERE ROW_NUMBER() OVER (ORDER BY Kolonne, Id) = 1
---ORDER BY ROW_NUMBER() OVER (ORDER BY Kolonne, Id)
+    Col,
+    ROW_NUMBER() OVER (ORDER BY Col, Id) AS RowNum
+FROM #TableA
+--WHERE ROW_NUMBER() OVER (ORDER BY Col, Id) = 1
+--ORDER BY ROW_NUMBER() OVER (ORDER BY Col, Id)
 ;
 
 /* [Vis eksempel på hvordan tolkningen af window-funktioner ikke er entydig hvis den blev evalueret logisk
@@ -457,11 +459,11 @@ FROM TabelA
 
 SELECT
     Id
-FROM TabelA
-WHERE Kolonne > '20220501'
-    AND ROW_NUMBER() OVER (ORDER BY Kolonne, Id) > 2
---WHERE ROW_NUMBER() OVER (ORDER BY Kolonne, Id) > 2
---    AND Kolonne > '20220501'
+FROM #TableA
+WHERE Col > '20220501'
+    AND ROW_NUMBER() OVER (ORDER BY Col, Id) > 2
+--WHERE ROW_NUMBER() OVER (ORDER BY Col, Id) > 2
+--    AND Col > '20220501'
 ;
 
 /* [Vis eksempel på window-funktioner og samspillet med DISTINCT] */
@@ -469,10 +471,10 @@ WHERE Kolonne > '20220501'
 /* Kan du gætte resultatet af nedenstående query? */
 
 SELECT DISTINCT
-    Kolonne,
-    ROW_NUMBER() OVER(ORDER BY Kolonne) AS Nr
-FROM TabelA
-ORDER BY Kolonne;
+    Col,
+    ROW_NUMBER() OVER(ORDER BY Col) AS RowNum
+FROM #TableA
+ORDER BY Col;
 
 /* [Vis eksempel på hvordan window-funktioner alligevel kan tages i brug i andre delsætninger, fx via
     en CTE] */
@@ -482,17 +484,17 @@ ORDER BY Kolonne;
 WITH CTE AS (
     SELECT
         Id,
-        Kolonne,
-        ROW_NUMBER() OVER(ORDER BY Kolonne, Id) AS Nr
-    FROM TabelA
+        Col,
+        ROW_NUMBER() OVER(ORDER BY Col, Id) AS RowNum
+    FROM #TableA
 )
 
 SELECT
     *
 FROM CTE
-WHERE Nr > 2;
+WHERE RowNum > 2;
 
-DROP TABLE TabelA;
+DROP TABLE #TableA;
 
 /* ***********************
 
@@ -516,107 +518,109 @@ Der findes forskellige familier af window-funktioner:
 
 /* [Mockup] */
 
-CREATE TABLE TabelA (
+CREATE TABLE #TableA (
     Id int NOT NULL,
-    Dato date NOT NULL,
-    Kategori nvarchar(100) NOT NULL,
-    Værdi int NULL
+    Dat date NOT NULL,
+    Cat nvarchar(100) NOT NULL,
+    Val int NULL
 );
 
-INSERT INTO TabelA (Id, Dato, Kategori, Værdi)
+INSERT INTO #TableA (Id, Dat, Cat, Val)
 VALUES
 (1, '20220101', 'A', 22), (2, '20000504', 'A', 5), (3, '20150205', 'A', 0),
-(4, '20101203', 'B', 14), (5, '20050824', 'B', 79), (6, '20220930', 'B', 100), (7, '20220315', 'B', 43), (8, '20210710', 'B', 43),
-(9, '20000504', 'C', 1), (10, '20221231', 'C', 112);
+(4, '20101203', 'B', 14), (5, '20050824', 'B', 79), (6, '20220930', 'B', 100),
+(7, '20220315', 'B', 43), (8, '20210710', 'B', 43), (9, '20000504', 'C', 1),
+(10, '20221231', 'C', 112);
 
 SELECT
     *
-FROM TabelA;
+FROM #TableA;
 
 /* Ranking: */
 
 SELECT
     Id,
-    Dato,
-    Kategori,
-    Værdi,
+    Dat,
+    Cat,
+    Val,
     ROW_NUMBER() OVER(
-        PARTITION BY Kategori
-        ORDER BY Værdi
-    ) AS RækkeNr,
+        PARTITION BY Cat
+        ORDER BY Val
+    ) AS RowNum,
     RANK() OVER(
-        PARTITION BY Kategori
-        ORDER BY Værdi
+        PARTITION BY Cat
+        ORDER BY Val
     ) AS Rank,
     DENSE_RANK() OVER(
-        PARTITION BY Kategori
-        ORDER BY Værdi
+        PARTITION BY Cat
+        ORDER BY Val
     ) AS DenseRank,
     NTILE(2) OVER(
-        PARTITION BY Kategori
-        ORDER BY Værdi
+        PARTITION BY Cat
+        ORDER BY Val
     ) AS NTile
-FROM TabelA
-ORDER BY Kategori, Værdi;
+FROM #TableA
+ORDER BY Cat, Val;
 
 /* Offset: */
 
 SELECT
     Id,
-    Dato,
-    Kategori,
-    Værdi,
-    LAG(Værdi/*, 1, NULL*/) OVER(
-        PARTITION BY Kategori
-        ORDER BY Værdi
-    ) AS TidligereVærdi,
-    LEAD(Værdi/*, 1, NULL*/) OVER(
-        PARTITION BY Kategori
-        ORDER BY Værdi
-    ) AS NæsteVærdi,
-    FIRST_VALUE(Værdi) OVER(
-        PARTITION BY Kategori
-        ORDER BY Værdi
+    Dat,
+    Cat,
+    Val,
+    LAG(Val/*, 1, NULL*/) OVER(
+        PARTITION BY Cat
+        ORDER BY Val
+    ) AS PrevVal,
+    LEAD(Val/*, 1, NULL*/) OVER(
+        PARTITION BY Cat
+        ORDER BY Val
+    ) AS NextVal,
+    FIRST_VALUE(Val) OVER(
+        PARTITION BY Cat
+        ORDER BY Val
         ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
-    ) AS FørsteVærdi,
-    LAST_VALUE(Værdi) OVER(
-        PARTITION BY Kategori
-        ORDER BY Værdi
+    ) AS FirstVal,
+    LAST_VALUE(Val) OVER(
+        PARTITION BY Cat
+        ORDER BY Val
         ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING
-    ) AS SidsteVærdi
-FROM TabelA
-ORDER BY Kategori, Værdi;
+    ) AS LastVal
+FROM #TableA
+ORDER BY Cat, Val;
 
 /* Aggregering: */
 
 SELECT
     Id,
-    Dato,
-    Kategori,
-    Værdi,
+    Dat,
+    Cat,
+    Val,
     COUNT(*) OVER(
-        PARTITION BY Kategori
-        /*ORDER BY Værdi
+        PARTITION BY Cat
+        /*ORDER BY Val
         RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW*/
-    ) AS Antal,
-    MIN(Værdi) OVER(
-        PARTITION BY Kategori
-        ORDER BY Værdi
-    ) AS MindsteVærdi,
-    MAX(Værdi) OVER(
-        PARTITION BY Kategori
-        /*ORDER BY Værdi
+    ) AS Cnt,
+    MIN(Val) OVER(
+        PARTITION BY Cat
+        /*ORDER BY Val
         RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW*/
-    ) AS MaxVærdi,
-    SUM(Værdi) OVER(
-        PARTITION BY Kategori
-        /*ORDER BY Værdi
+    ) AS MinVal,
+    MAX(Val) OVER(
+        PARTITION BY Cat
+        /*ORDER BY Val
         RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW*/
-    ) AS SumVærdi
-FROM TabelA
-ORDER BY Kategori, Værdi;
+    ) AS MaxVal,
+    SUM(Val) OVER(
+        PARTITION BY Cat
+        /*ORDER BY Val
+        RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW*/
+    ) AS SumVal
+FROM #TableA
+ORDER BY Cat, Val;
 
-DROP TABLE TabelA;
+DROP TABLE #TableA;
 
 /* [Stack Overflow] */
 
@@ -629,7 +633,7 @@ SELECT
     Reputation,
     ROW_NUMBER() OVER(
         ORDER BY Reputation
-    ) AS RækkeNr,
+    ) AS RowNum,
     RANK() OVER(
         ORDER BY Reputation
     ) AS Rank,
@@ -650,41 +654,20 @@ SELECT
     DisplayName,
     [Location],
     Reputation,
-    ROW_NUMBER() OVER(
-        ORDER BY Reputation
-    ) AS RækkeNr,
-    RANK() OVER(
-        ORDER BY Reputation
-    ) AS Rank,
-    DENSE_RANK() OVER(
-        ORDER BY Reputation
-    ) AS DenseRank,
-    NTILE(2) OVER(
-        ORDER BY Reputation
-    ) AS NTile
-FROM dbo.Users
-WHERE [Location] = 'Denmark'
-ORDER BY Reputation;
-
-SELECT
-    Id,
-    DisplayName,
-    [Location],
-    Reputation,
     LAG(Reputation/*, 1, NULL*/) OVER(
         ORDER BY Reputation
-    ) AS TidligereVærdi,
+    ) AS PrevVal,
     LEAD(Reputation/*, 1, NULL*/) OVER(
         ORDER BY Reputation
-    ) AS NæsteVærdi,
+    ) AS NextVal,
     FIRST_VALUE(Reputation) OVER(
         ORDER BY Reputation
         ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
-    ) AS FørsteVærdi,
+    ) AS FirstVal,
     LAST_VALUE(Reputation) OVER(
         ORDER BY Reputation
         ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING
-    ) AS SidsteVærdi
+    ) AS LastVal
 FROM dbo.Users
 WHERE [Location] = 'Denmark'
 ORDER BY Reputation;
@@ -699,18 +682,18 @@ SELECT
     COUNT(*) OVER(
         /*ORDER BY Reputation
         RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW*/
-    ) AS Antal,
+    ) AS Cnt,
     MIN(Reputation) OVER(
         ORDER BY Reputation
-    ) AS MindsteVærdi,
+    ) AS MinVal,
     MAX(Reputation) OVER(
         /*ORDER BY Reputation
         RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW*/
-    ) AS MaxVærdi,
+    ) AS MaxVal,
     SUM(Reputation) OVER(
         /*ORDER BY Reputation
         RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW*/
-    ) AS SumVærdi
+    ) AS SumVal
 FROM dbo.Users
 WHERE [Location] = 'Denmark'
 ORDER BY Reputation;
@@ -722,10 +705,10 @@ Opgave 4: Dan et rækkenummer for spørgsmål lavet af bruger 214. Rækkenummere
 
 - Tabeller involveret:  dbo.Posts
 - Ønsket output:
-Id	    OwnerUserId	Title	                                            ViewCount	CreationDate	        Rownum
-7610390	214	        Deriving a random long value from random integers	42	        2011-09-30 12.30.47.453	1
-9175497	214	        Redundancy in web API	                            88	        2012-02-07 11.33.20.793	2
-8098868	214	        ? extends TSubject extends Subject - Not type ...	112	        2011-11-11 19.22.41.780	3
+Id	    OwnerUserId	Title	                        ViewCount	CreationDate	        Rownum
+7610390	214	        Deriving a random long value...	42          2011-09-30 12.30.47.453	1
+9175497	214	        Redundancy in web API	        88	        2012-02-07 11.33.20.793	2
+8098868	214	        ? extends TSubject extends...	112	        2011-11-11 19.22.41.780	3
 ...
 (44 rows)
 */
@@ -736,7 +719,7 @@ SELECT
     Title,
     ViewCount,
     CreationDate,
-    ROW_NUMBER() OVER(ORDER BY ViewCount, CreationDate) AS Rownum
+    ROW_NUMBER() OVER(ORDER BY ViewCount, CreationDate) AS RowNum
 FROM dbo.Posts
 WHERE PostTypeId = 1 -- Question
 AND OwnerUserId = 214

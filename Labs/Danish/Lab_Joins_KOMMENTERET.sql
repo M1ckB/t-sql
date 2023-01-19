@@ -42,43 +42,43 @@ JOIN-tabeloperatoren:
 
 /* [Mockup] */
 
-CREATE TABLE TabelA (
+CREATE TABLE #TableA (
   Id int NOT NULL,
-  TabelB_Id int NOT NULL
+  TableB_Id int NOT NULL
 );
 
-INSERT INTO TabelA (Id, TabelB_Id)
+INSERT INTO #TableA (Id, TableB_Id)
 VALUES
 (1, 5), 
 (2, 6);
 
-CREATE TABLE TabelB (
+CREATE TABLE #TableB (
   Id int NOT NULL,
-  Kolonne nvarchar(100) NULL
+  Col nvarchar(100) NULL
 );
 
-INSERT INTO TabelB (Id, Kolonne)
+INSERT INTO #TableB (Id, Col)
 VALUES
-(5, 'Oplysning fra tabel B');
+(5, 'Info from table B');
 
 SELECT
   *
-FROM TabelA;
+FROM #TableA;
 
 SELECT
   *
-FROM TabelB;
+FROM #TableB;
 
 SELECT
   a.Id,
-  a.TabelB_Id,
-  b.Kolonne
-FROM TabelA AS a
-JOIN TabelB AS b
-  ON b.Id = a.TabelB_Id;
+  a.TableB_Id,
+  b.Col
+FROM #TableA AS a
+JOIN #TableB AS b
+  ON b.Id = a.TableB_Id;
 
-DROP TABLE TabelA;
-DROP TABLE TabelB;
+DROP TABLE #TableA;
+DROP TABLE #TableB;
 
 /* [Stack Overflow] */
 
@@ -125,41 +125,41 @@ CROSS JOIN <tabel2>;
 
 /* [Mockup] */
 
-CREATE TABLE TabelA (
-  År int NOT NULL
+CREATE TABLE #TableA (
+  [Year] int NOT NULL
 );
 
-INSERT INTO TabelA (År)
+INSERT INTO #TableA ([Year])
 VALUES
 (2020), (2021), (2022);
 
-CREATE TABLE TabelB (
-  MånedNr int NOT NULL,
-  MånedNavn nvarchar(100) NOT NULL
+CREATE TABLE #TableB (
+  [Month] int NOT NULL,
+  MonthName nvarchar(100) NOT NULL
 );
 
-INSERT INTO TabelB (MånedNr, MånedNavn)
+INSERT INTO #TableB ([Month], MonthName)
 VALUES
-(1, 'Jan'), (2, 'Feb'), (3, 'Mar'), (4, 'Apr'), (5, 'Maj'), (6, 'Jun'),
-(7, 'Jul'), (8, 'Aug'), (9, 'Sep'), (10, 'Okt'), (11, 'Nov'), (12, 'Dec');
+(1, 'Jan'), (2, 'Feb'), (3, 'Mar'), (4, 'Apr'), (5, 'May'), (6, 'Jun'),
+(7, 'Jul'), (8, 'Aug'), (9, 'Sep'), (10, 'Oct'), (11, 'Nov'), (12, 'Dec');
 
 SELECT
   *
-FROM TabelA;
+FROM #TableA;
 
 SELECT
   *
-FROM TabelB;
+FROM #TableB;
 
 SELECT
-  a.År,
-  b.MånedNavn
-FROM TabelA AS a
-CROSS JOIN TabelB AS b
-ORDER BY a.År, b.MånedNr;
+  a.[Year],
+  b.MonthName
+FROM #TableA AS a
+CROSS JOIN #TableB AS b
+ORDER BY a.[Year], b.[Month];
 
-DROP TABLE TabelA;
-DROP TABLE TabelB;
+DROP TABLE #TableA;
+DROP TABLE #TableB;
 
 /* [Stack Overflow] */
 
@@ -241,42 +241,42 @@ INNER JOIN <tabel2>
 
 /* [Mockup] */
 
-CREATE TABLE TabelA (
+CREATE TABLE #TableA (
   Id int NOT NULL,
-  TabelB_Id int NULL
+  TableB_Id int NULL
 );
 
-INSERT INTO TabelA (Id, TabelB_Id)
+INSERT INTO #TableA (Id, TableB_Id)
 VALUES
 (1, NULL), (2, 3);
 
-CREATE TABLE TabelB (
+CREATE TABLE #TableB (
   Id int NOT NULL,
-  Kolonne nvarchar(100) NULL
+  Col nvarchar(100) NULL
 );
 
-INSERT INTO TabelB (Id, Kolonne)
+INSERT INTO #TableB (Id, Col)
 VALUES
 (1, 'ABC'), (2, 'DEF'), (3, 'GHI');
 
 SELECT
   *
-FROM TabelA;
+FROM #TableA;
 
 SELECT
   *
-FROM TabelB;
+FROM #TableB;
 
 SELECT
   a.Id,
-  a.TabelB_Id,
-  b.Kolonne
-FROM TabelA AS a
-INNER JOIN TabelB AS b
-  ON b.Id = a.TabelB_Id;
+  a.TableB_Id,
+  b.Col
+FROM #TableA AS a
+INNER JOIN #TableB AS b
+  ON b.Id = a.TableB_Id;
 
-DROP TABLE TabelA;
-DROP TABLE TabelB;
+DROP TABLE #TableA;
+DROP TABLE #TableB;
 
 /* [Stack Overflow] */
 
@@ -414,42 +414,42 @@ FULL OUTER JOIN <tabel2>
 
 /* [Mockup] */
 
-CREATE TABLE TabelA (
+CREATE TABLE #TableA (
   Id int NOT NULL,
-  TabelB_Id int NULL
+  TableB_Id int NULL
 );
 
-INSERT INTO TabelA (Id, TabelB_Id)
+INSERT INTO #TableA (Id, TableB_Id)
 VALUES
 (1, NULL), (2, 3);
 
-CREATE TABLE TabelB (
+CREATE TABLE #TableB (
   Id int NOT NULL,
-  Kolonne nvarchar(100) NULL
+  Col nvarchar(100) NULL
 );
 
-INSERT INTO TabelB (Id, Kolonne)
+INSERT INTO #TableB (Id, Col)
 VALUES
 (1, 'ABC'), (2, 'DEF'), (3, 'GHI');
 
 SELECT
   *
-FROM TabelA;
+FROM #TableA;
 
 SELECT
   *
-FROM TabelB;
+FROM #TableB;
 
 SELECT
   a.Id,
-  a.TabelB_Id,
-  b.Kolonne
-FROM TabelA AS a
-LEFT OUTER JOIN TabelB AS b
-  ON b.Id = a.TabelB_Id;
+  a.TableB_Id,
+  b.Col
+FROM #TableA AS a
+LEFT OUTER JOIN #TableB AS b
+  ON b.Id = a.TableB_Id;
 
-DROP TABLE TabelA;
-DROP TABLE TabelB;
+DROP TABLE #TableA;
+DROP TABLE #TableB;
 
 /* [Stack Overflow] */
 
@@ -524,45 +524,45 @@ Flere eksempler med joins:
 
 /* [Mockup] */
 
-CREATE TABLE TabelA (
+CREATE TABLE #TableA (
   Id int NOT NULL,
-  TabelB_Id int NULL
+  TableB_Id int NULL
 );
 
-INSERT INTO TabelA (Id, TabelB_Id)
+INSERT INTO #TableA (Id, TableB_Id)
 VALUES
 (1, NULL), (2, 3), (3, 1);
 
-CREATE TABLE TabelB (
+CREATE TABLE #TableB (
   Id int NOT NULL,
-  Kolonne1 nvarchar(100) NULL,
-  Kolonne2 date NULL
+  Col1 nvarchar(100) NULL,
+  Col2 date NULL
 );
 
-INSERT INTO TabelB (Id, Kolonne1, Kolonne2)
+INSERT INTO #TableB (Id, Col1, Col2)
 VALUES
 (1, 'ABC', '19380101'), (2, 'DEF', '20120312'), (3, 'GHI', '20200521');
 
 SELECT
   *
-FROM TabelA;
+FROM #TableA;
 
 SELECT
   *
-FROM TabelB;
+FROM #TableB;
 
 SELECT
   a.Id,
-  a.TabelB_Id,
-  b.Kolonne1,
-  b.Kolonne2
-FROM TabelA AS a
-LEFT OUTER JOIN TabelB AS b
-  ON b.Id = a.TabelB_Id
-  AND b.Kolonne2 > CAST('20000101' AS date);
+  a.TableB_Id,
+  b.Col1,
+  b.Col2
+FROM #TableA AS a
+LEFT OUTER JOIN #TableB AS b
+  ON b.Id = a.TableB_Id
+  AND b.Col2 > CAST('20000101' AS date);
 
-DROP TABLE TabelA;
-DROP TABLE TabelB;
+DROP TABLE #TableA;
+DROP TABLE #TableB;
 
 /* [Stack Overflow] */
 
@@ -586,62 +586,62 @@ WHERE p.PostTypeId = 1; -- Question
 
 /* [Mockup] */
 
-CREATE TABLE TabelA (
+CREATE TABLE #TableA (
   Id int NOT NULL,
-  TabelB_Id int NULL
+  TableB_Id int NULL
 );
 
-INSERT INTO TabelA (Id, TabelB_Id)
+INSERT INTO #TableA (Id, TableB_Id)
 VALUES
 (1, NULL), (2, 3), (3, 1);
 
-CREATE TABLE TabelB (
+CREATE TABLE #TableB (
   Id int NOT NULL,
-  KolonneB nvarchar(100) NULL,
-  TabelC_Id int NULL
+  ColB nvarchar(100) NULL,
+  TableC_Id int NULL
 );
 
-INSERT INTO TabelB (Id, KolonneB, TabelC_Id)
+INSERT INTO #TableB (Id, ColB, TableC_Id)
 VALUES
 (1, 'ABC', 3), (2, 'DEF', 1), (3, 'GHI', 2);
 
-CREATE TABLE TabelC (
+CREATE TABLE #TableC (
   Id int NOT NULL,
-  KolonneC date NULL
+  ColC date NULL
 );
 
-INSERT INTO TabelC (Id, KolonneC)
+INSERT INTO #TableC (Id, ColC)
 VALUES
 (1, '20201231'), (2, '19250102'), (3, '20500304');
 
 SELECT
   *
-FROM TabelA;
+FROM #TableA;
 
 SELECT
   *
-FROM TabelB;
+FROM #TableB;
 
 SELECT
   *
-FROM TabelC;
+FROM #TableC;
 
 SELECT
   a.Id,
-  a.TabelB_Id,
-  b.KolonneB,
-  b.TabelC_Id,
-  c.KolonneC
-FROM TabelA AS a
-LEFT OUTER JOIN TabelB AS b
-  ON b.Id = a.TabelB_Id
-LEFT OUTER JOIN TabelC AS c
--- INNER JOIN TabelC AS c
-  ON c.Id = b.TabelC_Id;
+  a.TableB_Id,
+  b.ColB,
+  b.TableC_Id,
+  c.ColC
+FROM #TableA AS a
+LEFT OUTER JOIN #TableB AS b
+  ON b.Id = a.TableB_Id
+LEFT OUTER JOIN #TableC AS c
+-- INNER JOIN #TableC AS c
+  ON c.Id = b.TableC_Id;
 
-DROP TABLE TabelA;
-DROP TABLE TabelB;
-DROP TABLE TabelC;
+DROP TABLE #TableA;
+DROP TABLE #TableB;
+DROP TABLE #TableC;
 
 /* [Stack Overflow] */
 

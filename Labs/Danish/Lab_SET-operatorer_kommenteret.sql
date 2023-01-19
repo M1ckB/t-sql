@@ -52,40 +52,40 @@ UNION set-operatoren:
 
 /* [Mockup] */
 
-CREATE TABLE TabA (
+CREATE TABLE #TableA (
   Id int NOT NULL,
   Col int NOT NULL
 );
 
-INSERT INTO TabA (Id, Col)
+INSERT INTO #TableA (Id, Col)
 VALUES
 (1, 5), 
 (2, 6);
 
-CREATE TABLE TabB (
+CREATE TABLE #TableB (
   Id int NOT NULL,
   Col int NOT NULL
 );
 
-INSERT INTO TabB (Id, Col)
+INSERT INTO #TableB (Id, Col)
 VALUES
 (1, 5), 
 (3, 7);
 
 
-SELECT * FROM TabA;
-SELECT * FROM TabB;
+SELECT * FROM #TableA;
+SELECT * FROM #TableB;
 
-SELECT Id, Col FROM TabA
+SELECT Id, Col FROM #TableA
 UNION
-SELECT Id, Col FROM TabB;
+SELECT Id, Col FROM #TableB;
 
-SELECT Id, Col FROM TabA
+SELECT Id, Col FROM #TableA
 UNION ALL
-SELECT Id, Col FROM TabB;
+SELECT Id, Col FROM #TableB;
 
-DROP TABLE TabA;
-DROP TABLE TabB;
+DROP TABLE #TableA;
+DROP TABLE #TableB;
 
 /*[Bemærk: Kolonnenavnet på tabel-resultatet bestemmes af første SELECT-forespørgsel i UNION-operatoren.
    Derfor er det vigtigt at kolonnerne i de to SELECT-forespørgsler kommer i rigtig rækkefølge. 
@@ -185,42 +185,42 @@ INTERSECT og EXCEPT SET-operatorerne:
 
 /* [Mockup] */
 
-CREATE TABLE TabA (
+CREATE TABLE #TableA (
   Id int NOT NULL,
   Col int NOT NULL
 );
 
-INSERT INTO TabA (Id, Col)
+INSERT INTO #TableA (Id, Col)
 VALUES
 (1, 5), 
 (2, 6);
 
-CREATE TABLE TabB (
+CREATE TABLE #TableB (
   Id int NOT NULL,
   Col int NOT NULL
 );
 
-INSERT INTO TabB (Id, Col)
+INSERT INTO #TableB (Id, Col)
 VALUES
 (1, 5), 
 (3, 7);
 
 
-SELECT * FROM TabA;
-SELECT * FROM TabB;
+SELECT * FROM #TableA;
+SELECT * FROM #TableB;
 
 
-SELECT Id, Col FROM TabA
+SELECT Id, Col FROM #TableA
 INTERSECT
-SELECT Id, Col FROM TabB;
+SELECT Id, Col FROM #TableB;
 
-SELECT Id, Col FROM TabA
+SELECT Id, Col FROM #TableA
 EXCEPT
-SELECT Id, Col FROM TabB;
+SELECT Id, Col FROM #TableB;
 
 
-DROP TABLE TabA;
-DROP TABLE TabB;
+DROP TABLE #TableA;
+DROP TABLE #TableB;
 
 /*[Bemærk: 
     UNION er virkelig god til at konkatenere tabeller med samme kolonner!

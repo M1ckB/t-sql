@@ -50,34 +50,34 @@ UNPIVOT forvandler kolonner i en tabel-resultatet fra en SELECT-forespørgsel ti
 
 /* [Mockup] */
 
-CREATE TABLE TabA (
+CREATE TABLE #TableA (
   Id int NOT NULL,
   GrpCol nvarchar(1) NOT NULL, 
   SumCol int NOT NULL
 );
 
-INSERT INTO TabA (Id, GrpCol, SumCol)
+INSERT INTO #TableA (Id, GrpCol, SumCol)
 VALUES
 (1, 'A', 100), 
 (1, 'A', 100), 
 (2, 'A', 200), 
 (2, 'B', 300);
 
-SELECT * FROM TabA;
+SELECT * FROM #TableA;
 
 --Hvis vi skulle gøre det 'i hånden'...
 SELECT Id, 
  SUM(CASE WHEN GrpCol = 'A' THEN SumCol END) AS A, 
  SUM(CASE WHEN GrpCol = 'B' THEN SumCol END) AS B
-FROM TabA 
+FROM #TableA 
 GROUP BY Id
 
 --Med PIVOT bliver syntaksen mere kompakt...
 SELECT Id, A, B
-FROM TabA
+FROM #TableA
 PIVOT( SUM(SumCol) FOR GrpCol IN (A,B) ) AS p
 
-DROP TABLE TabA;
+DROP TABLE #TableA;
 
 /* [Stack Overflow] */
 
