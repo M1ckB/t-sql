@@ -3,20 +3,20 @@
 ## Emne 1: Joins og set operators
 
 - [x] Joins (Mick)
+- [ ] `PIVOT` og `UNPIVOT` (Thomas)
 - [X] `UNION`, `INTERSECT`, `EXCEPT` (Thomas)
 
-## Emne 2: Window functions
-
-- [X] Window functions (Mick)
-- [ ] `PIVOT` og `UNPIVOT` (Thomas)
-
-## Emne 3: Table Expressions
+## Emne 2: Table Expressions
 
 - [ ] Subqueries (Mick)
 - [ ] Derived tables (Mick)
 - [ ] Common table expressions (Thomas)
 - [ ] Views (Thomas)
 - [ ] Temporary tables (Mick)
+
+## Emne 3: Window functions
+
+- [X] Window functions (Mick)
 
 ## Emne 4: Programmable objects
 
