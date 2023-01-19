@@ -37,6 +37,15 @@ SET-operatorer:
 
 /* ***********************
 
+Use case(s):
+
+- Kombination af delresultater til et samlet resultat, fx oplysninger fra forskellige adm. systemer
+- Fjernelse af udvalgte rækker fra en tabel, fx via en negativliste
+
+*/
+
+/* ***********************
+
 UNION set-operatoren:
 
 - UNION konkatenerer tabel-resultaterne af to SELECT-forespørgsler til et enkelt tabel-resultat.
