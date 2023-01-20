@@ -62,6 +62,8 @@ Pivotering handler altid om at identificere involverede elementer:
 2. fra kolonner til rækker (UNPIVOT) 
 */
 
+/*PIVOT*/
+
 /* [Mockup] */
 
 CREATE TABLE #TableTxt (
@@ -210,6 +212,32 @@ PIVOT(AVG(ViewCount) FOR UserType IN ([User],[Superuser])) p
 DROP TABLE #viewsbyusertypes;
 */
 
+
+
+/*UNPIVOT*/
+
+/* [Mockup] */
+
+CREATE TABLE #TableA (
+  Id int NOT NULL,
+  [2020] nvarchar(1) NOT NULL, 
+  [2021] nvarchar(1) NOT NULL, 
+  [2022] nvarchar(1) NOT NULL);
+
+INSERT INTO #TableA (Id, [2020], [2021], [2022])
+VALUES
+(1, 'A', 'B', 'C'), 
+(2, 'B', 'C', 'D'), 
+(3, 'E', 'F', 'G');
+
+SELECT * FROM #TableA;
+
+-- UNPIVOT  
+SELECT Id, [Year], [Value]
+FROM #TableA
+UNPIVOT  ([Value] FOR [Year] IN ([2020], [2021], [2022])) up;  
+
+DROP TABLE #TableA
 
 /* ***********************
 
