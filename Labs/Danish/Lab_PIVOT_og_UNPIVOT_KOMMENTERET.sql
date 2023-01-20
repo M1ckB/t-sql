@@ -62,37 +62,36 @@ Pivotering handler altid om at identificere involverede elementer:
 2. fra kolonner til rækker (UNPIVOT) 
 */
 
-/*PIVOT*/
+
 
 /* [Mockup] */
 
-CREATE TABLE #TableTxt (
+CREATE TABLE #OrigTxt (
   GroupId int NOT NULL,
   SpreadCol nvarchar(1) NOT NULL, 
   AggCol int NOT NULL
 );
-INSERT INTO #TableTxt (GroupId, SpreadCol, AggCol)
+INSERT INTO #OrigTxt (GroupId, SpreadCol, AggCol)
 VALUES
-(1, 'A', 100), 
 (1, 'A', 100), 
 (2, 'A', 200), 
 (2, 'B', 300);
 
-CREATE TABLE #TableNum (
+CREATE TABLE #OrigNum (
   GroupId int NOT NULL,
   SpreadCol int NOT NULL, 
   AggCol int NOT NULL
 );
-INSERT INTO #TableNum (GroupId, SpreadCol, AggCol)
+INSERT INTO #OrigNum (GroupId, SpreadCol, AggCol)
 VALUES
-(1, 10, 100), 
 (1, 10, 100), 
 (2, 10, 200), 
 (2, 20, 300);
 
-SELECT * FROM #TableTxt;
-SELECT * FROM #TableNum;
+SELECT * FROM #OrigTxt;
+SELECT * FROM #OrigNum;
 
+/*PIVOT*/
 
 --Hvad er grupperingselementet? Id
 --Hvad er spredningselementet? GrpCol
@@ -105,29 +104,49 @@ SELECT * FROM #TableNum;
 SELECT GroupId, 
  SUM(CASE WHEN SpreadCol = 'A' THEN AggCol END) AS A, 
  SUM(CASE WHEN SpreadCol = 'B' THEN AggCol END) AS B
-FROM #TableTxt 
+FROM #OrigTxt 
 GROUP BY GroupId;
 
 --med numerisk spredningskolonne...
 SELECT GroupId, 
  SUM(CASE WHEN SpreadCol = 10 THEN AggCol END) AS [10], 
  SUM(CASE WHEN SpreadCol = 20 THEN AggCol END) AS [20]
-FROM #TableNum 
+FROM #OrigNum 
 GROUP BY GroupId;
 
 
 --Med PIVOT bliver syntaksen mere kompakt og ens for tekst og numeriske spredningskolonner...
 
 SELECT GroupId, [A], [B]
-FROM #TableTxt
+FROM #OrigTxt
 PIVOT( SUM(AggCol) FOR SpreadCol IN ([A],[B]) ) AS p;
 
 SELECT GroupId, [10], [20]
-FROM #TableNum
+FROM #OrigNum
 PIVOT( SUM(AggCol) FOR SpreadCol IN ([10],[20]) ) AS p;
 
-DROP TABLE #TableTxt;
-DROP TABLE #TableNum;
+
+/*UNPIVOT*/
+
+--Gemmer outputtet af sidste forespørgsel i temp-tabel:
+SELECT GroupId, [10], [20]
+INTO #PivotNum
+FROM #OrigNum
+PIVOT( SUM(AggCol) FOR SpreadCol IN ([10],[20]) ) AS p;
+
+SELECT * FROM #OrigNum;
+SELECT * FROM #PivotNum;
+
+--UNPIVOT har næsten samme syntaks:
+SELECT GroupId, SpreadColNew, AggColNew
+FROM #PivotNum
+UNPIVOT  (AggColNew FOR SpreadColNew IN ([10], [20])) up;  
+
+
+
+DROP TABLE #OrigTxt;
+DROP TABLE #OrigNum;
+DROP TABLE #PivotNum;
 
 /* [Stack Overflow] */
 
