@@ -2,15 +2,40 @@
 
 The repository contains educational material used to host courses about Microsoft's Transact-SQL (T-SQL).
 
-The primary language used in the content of the repository is Danish.
+The content of the repository will be in both English and Danish.
 
 ## Map of Content
 
 The educational material is grouped into the following categories:
 
-- [Laboratories](Laboratories): Scripts used for theory, demos, and assignments
+- [Laboratories](Laboratories): Scripts used for demos and assignments
 - [Other materials](Other-materials): E.g. pictures
 - [Sample databases](Sample-databases): Information about sample databases that are used
+
+### Organization of Laboratories
+
+A laboratory is named according to the topic it covers. The laboratory is split into two files, a *demo* and some *exercises*. The demo is created as a Jupyter Notebook (with the file extension `.ipynb`) while the exercises are created as a SQL script (with the file extension `.sql`).
+
+### Topics
+
+Each laboratory concerns a specific topic. So far, the following topics are covered:
+
+- Table Operators:
+  - Joins
+  - PIVOT and UNPIVOT
+- Querying Metadata
+- Subqueries
+- Table Expressions:
+  - Derived Table
+  - Common Table Expression (CTE)
+  - View
+- Window Functions
+- Programmable Objects:
+  - Batches and Control-Flow Statements
+  - Dynamic SQL
+  - Temporary Table
+  - Routines
+  - Error Handling
 
 ## Credits
 
@@ -30,4 +55,4 @@ Under the following terms:
 - Attribution - You must give appropriate credit, provide a link to the license, and indicate if changes were made.
 - ShareAlike - If you remix, transform, or build upon the material, you must distribute your contributions under the same license as the original.
 
-[Read more about the license.](LICENSE.md)
+See `LICENSE` for details.
