@@ -4,7 +4,7 @@ JOINS
   af Thomas Lange & Mick Ahlmann Brun
 
 Version 1.0 2023-01-08
-
+X
 Laboratoriet kræver:
 
 - En understøttet version af SQL Server
