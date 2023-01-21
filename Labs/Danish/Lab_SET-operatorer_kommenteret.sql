@@ -1,8 +1,9 @@
 /* ***********************
 
-Emne: UNION, INTERSECT, EXCEPT
-Version: 1.1
-Dato: 2023-01-10
+MÆNGDEOPERATIONER: UNION, INTERSECT og EXCEPT
+  af Thomas Lange & Mick Ahlmann Brun
+
+Version 1.0 2023-01-10
 
 Laboratoriet kræver:
 
@@ -345,5 +346,26 @@ Hovedpointer:
   - EXCEPT:  Finder distinkte rækker i venstre resultat-tabel som ikke findes i højre resultat-tabel
 - Stærke til fx konkatenering af tabellers indhold og til at finde forskelle mellem tabellers indhold.
 - Når der er flere SET-operationer i en forespørgsel, så evealueres de fra venstre mod højre.
+
+*/
+
+/* ***********************
+
+Licens:
+
+Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+
+Mere info: https://creativecommons.org/licenses/by-sa/4.0/
+
+Du kan frit:
+
+- Dele: kopiere og distribuere materialet via ethvert medium og i ethvert format
+- Tilpasse: remixe, ændre og bygge på materialet til ethvert formål, selv erhvervsmæssigt
+
+Under følgende betingelser:
+
+- Kreditering: Du skal kreditere, dele et link til licensen og indikere om der er lavet ændringer.
+- Del på samme vilkår: Hvis du remixer, ændrer eller bygger på materialet, så skal dine bidrag distribueres
+  under samme licens som den originale.
 
 */

@@ -1,8 +1,9 @@
 /* ***********************
 
-Emne: Window-funktioner
-Version: 1.0
-Dato: 2023-01-11
+WINDOW-FUNKTIONER
+    af Thomas Lange & Mick Ahlmann Brun
+
+Version 1.0 2023-01-11
 
 Laboratoriet kræver:
 
@@ -807,5 +808,26 @@ Hovedpointer:
 - Window-funktioner evalueres logisk i SELECT- og ORDER BY-delsætningerne
 - Der findes forskellige typer af window-funktioner, herunder funktioner til ranking, offset,
     aggregeringer og statistik
+
+*/
+
+/* ***********************
+
+Licens:
+
+Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+
+Mere info: https://creativecommons.org/licenses/by-sa/4.0/
+
+Du kan frit:
+
+- Dele: kopiere og distribuere materialet via ethvert medium og i ethvert format
+- Tilpasse: remixe, ændre og bygge på materialet til ethvert formål, selv erhvervsmæssigt
+
+Under følgende betingelser:
+
+- Kreditering: Du skal kreditere, dele et link til licensen og indikere om der er lavet ændringer.
+- Del på samme vilkår: Hvis du remixer, ændrer eller bygger på materialet, så skal dine bidrag distribueres
+  under samme licens som den originale.
 
 */

@@ -1,8 +1,9 @@
 /* ***********************
 
-Emne: Joins
-Version: 1.1
-Dato: 2023-01-08
+JOINS
+  af Thomas Lange & Mick Ahlmann Brun
+
+Version 1.0 2023-01-08
 
 Laboratoriet kræver:
 
@@ -680,5 +681,26 @@ Hovedpointer:
   composite joins)
 - Når der er flere joins i en forespørgsel (også kaldt multijoin queries), så evalueres tabeloperatorerne
   fra venstre mod højre
+
+*/
+
+/* ***********************
+
+Licens:
+
+Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+
+Mere info: https://creativecommons.org/licenses/by-sa/4.0/
+
+Du kan frit:
+
+- Dele: kopiere og distribuere materialet via ethvert medium og i ethvert format
+- Tilpasse: remixe, ændre og bygge på materialet til ethvert formål, selv erhvervsmæssigt
+
+Under følgende betingelser:
+
+- Kreditering: Du skal kreditere, dele et link til licensen og indikere om der er lavet ændringer.
+- Del på samme vilkår: Hvis du remixer, ændrer eller bygger på materialet, så skal dine bidrag distribueres
+  under samme licens som den originale.
 
 */
