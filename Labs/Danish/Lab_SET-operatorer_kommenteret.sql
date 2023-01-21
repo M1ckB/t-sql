@@ -1,6 +1,6 @@
 /* ***********************
 
-MÆNGDEOPERATIONER: UNION, INTERSECT og EXCEPT
+SET-OPERATORER: UNION, INTERSECT og EXCEPT
   af Thomas Lange & Mick Ahlmann Brun
 
 Version 1.0 2023-01-10
@@ -38,7 +38,7 @@ SET-operatorer:
 
 /* ***********************
 
-Use case(s):
+Use cases:
 
 - Kombination af delresultater til et samlet resultat, fx oplysninger fra forskellige adm. systemer
 - Fjernelse af udvalgte rækker fra en tabel, fx via en negativliste

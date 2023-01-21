@@ -38,7 +38,7 @@ JOIN-tabeloperatoren:
 
 /* ***********************
 
-Use case(s):
+Use cases:
 
 - Kombination af oplysninger fra to eller flere tabeller
 

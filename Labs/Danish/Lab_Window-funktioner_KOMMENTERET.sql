@@ -37,7 +37,7 @@ Introduktion til window-funktioner:
 
 /* ***********************
 
-Use case(s):
+Use cases:
 
 - Beregning af TOP N per gruppe
 - Beregning af løbende totaler

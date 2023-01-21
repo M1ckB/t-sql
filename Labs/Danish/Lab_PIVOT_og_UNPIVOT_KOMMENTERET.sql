@@ -44,7 +44,7 @@ UNPIVOT forvandler kolonner i en tabel-resultatet fra en SELECT-forespørgsel ti
 
 /* ***********************
 
-Use case(s):
+Use cases:
 
 - Pivotering til præsentationsformål, her bruges særligt PIVOT (resultatet bliver til en "crosstab")
 - Normalisering af en tabel, her bruges særligt UNPIVOT
