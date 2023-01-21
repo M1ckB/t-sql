@@ -2,7 +2,7 @@
 
 JOINS
   af Thomas Lange & Mick Ahlmann Brun
-X
+
 Version 1.0 2023-01-08
 
 Laboratoriet kræver:
