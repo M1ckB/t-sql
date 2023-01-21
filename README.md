@@ -20,6 +20,23 @@ A laboratory is named according to the topic it covers. The laboratory is split 
 
 Each laboratory concerns a specific topic. So far, the following topics are covered:
 
+- Table Operators:
+  - Joins
+  - PIVOT and UNPIVOT
+- Querying Metadata
+- Subqueries
+- Table Expressions:
+  - Derived Table
+  - Common Table Expression (CTE)
+  - View
+- Window Functions
+- Programmable Objects:
+  - Batches and Control-Flow Statements
+  - Dynamic SQL
+  - Temporary Table
+  - Routines
+  - Error Handling
+
 ## Credits
 
 The content is owned and developed by [Thomas Lange](https://github.com/thomas-lange-dk) and [Mick Ahlmann Brun](https://github.com/M1ckB).
