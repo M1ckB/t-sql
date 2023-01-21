@@ -35,8 +35,6 @@ Introduktion til window-funktioner:
 - Modsat vores grupperede forespørgsler, så kan vi med window-funktioner bevare detaljen. Derudover
     kan man også definere en orden i sin beregning
 
-/* ***********************
-
 Use cases:
 
 - Beregning af TOP N per gruppe

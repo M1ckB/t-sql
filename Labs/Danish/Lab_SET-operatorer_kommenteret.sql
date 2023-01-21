@@ -36,8 +36,6 @@ SET-operatorer:
    - INTERSECT
    - EXCEPT 
 
-/* ***********************
-
 Use cases:
 
 - Kombination af delresultater til et samlet resultat, fx oplysninger fra forskellige adm. systemer

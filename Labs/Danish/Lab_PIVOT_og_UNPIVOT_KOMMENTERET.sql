@@ -42,8 +42,6 @@ En almindelig use case er, at man modtager data med flere kolonner for samme opl
 
 UNPIVOT forvandler kolonner i en tabel-resultatet fra en SELECT-forespørgsel til kolonneværdier (i flere rækker).
 
-/* ***********************
-
 Use cases:
 
 - Pivotering til præsentationsformål, her bruges særligt PIVOT (resultatet bliver til en "crosstab")

@@ -36,8 +36,6 @@ JOIN-tabeloperatoren:
 - JOIN-tabeloperatoren tager to tabeller som input, udfører nogle logiske processeringsfaser og returnerer
   en tabel som resultat
 
-/* ***********************
-
 Use cases:
 
 - Kombination af oplysninger fra to eller flere tabeller
