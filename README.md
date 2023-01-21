@@ -8,8 +8,7 @@ The primary language used in the content of the repository is Danish.
 
 The educational material is grouped into the following categories:
 
-- [Courses](Courses): Agreements with clients, time schedules etc.
-- [Labs](Labs): Scripts used for theory, demos, and assignments
+- [Laboratories](Laboratories): Scripts used for theory, demos, and assignments
 - [Other materials](Other-materials): E.g. pictures
 - [Sample databases](Sample-databases): Information about sample databases that are used
 
@@ -31,4 +30,4 @@ Under the following terms:
 - Attribution - You must give appropriate credit, provide a link to the license, and indicate if changes were made.
 - ShareAlike - If you remix, transform, or build upon the material, you must distribute your contributions under the same license as the original.
 
-[Read more about licensing.](LICENSE.md)
+[Read more about the license.](LICENSE.md)
