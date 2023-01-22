@@ -8,13 +8,17 @@ The content of the repository will be in both English and Danish.
 
 The educational material is grouped into the following categories:
 
-- [Laboratories](Laboratories): Scripts used for demos and assignments
+- [Laboratories](Laboratories): Scripts used for demos and assignments (this is the main content)
 - [Other materials](Other-materials): E.g. pictures
 - [Sample databases](Sample-databases): Information about sample databases that are used
 
 ### Organization of Laboratories
 
-A laboratory is named according to the topic it covers. The laboratory is split into two files, a *demo* and some *exercises*. The demo is created as a Jupyter Notebook (with the file extension `.ipynb`) while the exercises are created as a SQL script (with the file extension `.sql`).
+A laboratory is named according to the topic it covers. It is split into two files, a demo and some exercises. The demo is created as a Jupyter Notebook (with the file extension `.ipynb`) while the exercises are created as a SQL script (with the file extension `.sql`).
+
+The demo is where the exploration of a topic starts. It will explain and demonstrate concepts and there will be references to exercises along the way.
+
+The exercises work as a learning aid to help explore and grasp the concepts introduced.
 
 ### Topics
 
@@ -22,7 +26,7 @@ Each laboratory concerns a specific topic. So far, the following topics are cove
 
 ## Credits
 
-The content is owned and developed by [Thomas Lange](https://github.com/thomas-lange-dk) and [Mick Ahlmann Brun](https://github.com/M1ckB).
+The content is maintained and developed by [Thomas Lange](https://github.com/thomas-lange-dk) and [Mick Ahlmann Brun](https://github.com/M1ckB).
 
 ## Licensing
 
