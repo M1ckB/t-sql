@@ -27,6 +27,7 @@ Each laboratory concerns a specific topic. So far, the following topics are cove
 - Table Operators:
   - Joins
   - PIVOT and UNPIVOT
+- Set operators
 - Querying Metadata
 - Subqueries
 - Table Expressions:
