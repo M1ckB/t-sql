@@ -193,32 +193,9 @@ WHERE p.Id = 4;
 
 /*
 
-Opgave 1: Hvilke spørgsmål kan vi besvare med denne type af join?
+Lav opgave 1 og 2
 
 */
-
-/* [CROSS JOIN bruges til at populere alle kombinationer af to tabeller. Eksempelvis er dette relevant hvis
-  man ønsker at skifte granularitet fra en tidsenhed til en anden, fx fra år til måneder] */
-
-/*
-
-Opgave 2: Lav en query som returnerer alle kombinationer af indlægs- og stemmetyper.
-
-- Tabeller involveret:  dbo.PostTypes, dbo.VoteTypes
-- Ønsket output:
-Type      Name
-Question	AcceptedByOriginator
-Question	UpMod
-Question	DownMod
-...
-(120 rows)
-*/
-
-SELECT
-  p.[Type],
-  v.Name
-FROM dbo.PostTypes AS p
-CROSS JOIN dbo.VoteTypes AS v;
 
 /* ***********************
 
@@ -308,76 +285,9 @@ AND q.Tags LIKE '%<sql>%<inner-join>%';
 
 /*
 
-Opgave 3: Returner brugere fra USA og deres indlæg.
-
-- Tabeller involveret:  dbo.Users, dbo.Posts
-- Ønsket output:
-Id      Displayname       Location  PostTypeId  CreationDate
-65393	  Instance Hunter	  USA       2	          2009-02-12 12.51.08.890
-65393	  Instance Hunter	  USA	      1           2009-02-13 13.49.09.740
-65393	  Instance Hunter	  USA	      2           2009-02-16 20.35.06.343
-...
-(196.184 rows)
-*/
-
-/* [Bemærk at brugere fra USA uden indlæg ikke indgår] */
-
-SELECT
-  u.Id,
-  u.DisplayName,
-  u.[Location],
-  p.PostTypeId,
-  p.CreationDate
-FROM dbo.Users AS u
-INNER JOIN dbo.Posts AS p
-  ON p.OwnerUserId = u.Id
-WHERE u.[Location] = 'USA';
--- WHERE u.[Location] LIKE '%USA%';
-
-/*
-
-Opgave 4 (valgfri): Kan du opnå samme resultat ved at bruge et CROSS JOIN?
+Lav opgave 3, 4 og 5
 
 */
-
-SELECT
-  u.Id,
-  u.DisplayName,
-  u.[Location],
-  p.PostTypeId,
-  p.CreationDate
-FROM dbo.Users AS u
-CROSS JOIN dbo.Posts AS p
-WHERE p.OwnerUserId = u.Id
-AND u.[Location] = 'USA';
-
-/*
-
-Opgave 5: Returner unikke brugere som har fået badget "Teacher", sorteret aftagende på baggrund af omdømme.
-
-- Tabeller involveret:  dbo.Badges, dbo.Users
-- Ønsket output:
-Id	    DisplayName	    Reputation
-22656	  Jon Skeet	      1047863
-157882	BalusC	        818687
-29407	  Darin Dimitrov	814505
-...
-(535.840 rows)
-*/
-
-/* [Tag diskussion op omkring hvad der bør listes som join-betingelse og hvad der bør placeres i WHERE-
-  betingelsen] */
-
-SELECT DISTINCT
-  u.Id,
-  u.DisplayName,
-  u.Reputation
-FROM dbo.Users AS u
-INNER JOIN dbo.Badges AS b
-  ON b.UserId = u.Id
---  AND b.Name = 'Teacher'
-WHERE b.Name = 'Teacher'
-ORDER BY u.Reputation DESC;
 
 /* ***********************
 
@@ -472,51 +382,9 @@ AND q.Tags LIKE '%<sql>%<inner-join>%';
 
 /*
 
-Opgave 6: Returner brugere fra USA og deres indlæg, inklusiv brugere som ingen indlæg har lavet.
+Lav opgave 6 og 7
 
-- Tabeller involveret:  dbo.Users, dbo.Posts
-- Ønsket output:
-Id	  DisplayName	    Location	PostTypeId	CreationDate
-65393	Instance Hunter	USA	      1	          2009-03-04 03.09.41.437
-65393	Instance Hunter	USA	      2	          2009-03-04 03.33.02.627
-76840	aikeru	        USA	      1	          2009-03-11 19.14.55.487
-...
-(25.348 rows)
 */
-
-SELECT
-  u.Id,
-  u.DisplayName,
-  u.[Location],
-  p.PostTypeId,
-  p.CreationDate
-FROM dbo.Users AS u
-LEFT OUTER JOIN dbo.Posts AS p
-  ON p.OwnerUserId = u.Id
-WHERE u.[Location] = 'USA';
-
-/*
-
-Opgave 7: Returner brugere som ingen indlæg har lavet.
-
-- Tabeller involveret:  dbo.Users, dbo.Posts
-- Ønsket output:
-Id	    DisplayName	            Reputation
-2901047	user2901047	            1
-2474029	user2474029	            1
-2740827	Said Falukatif Bakalli	1
-...
-(1.030.987 rows)
-*/
-
-SELECT
-  u.Id,
-  u.DisplayName,
-  u.Reputation
-FROM dbo.Users AS u
-LEFT OUTER JOIN dbo.Posts AS p
-  ON p.OwnerUserId = u.Id
-WHERE p.Id IS NULL;
 
 /* ***********************
 
