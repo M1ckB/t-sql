@@ -26,15 +26,15 @@ Each laboratory concerns a specific topic. So far, the following topics are cove
 
 - Table Operators:
   - Joins ([Danish](Laboratories/Danish/Joins.ipynb))
-  - PIVOT and UNPIVOT
-- Set operators
+  - PIVOT and UNPIVOT ([Danish](Laboratories/Danish/PIVOT-and-UNPIVOT.ipynb))
+- Set operators ([Danish](Laboratories/Danish/Set-operators.ipynb))
 - Querying Metadata
 - Subqueries
 - Table Expressions:
   - Derived Table
   - Common Table Expression (CTE)
   - View
-- Window Functions
+- Window Functions ([Danish](Laboratories/Danish/Window-functions.ipynb))
 - Programmable Objects:
   - Batches and Control-Flow Statements
   - Dynamic SQL
