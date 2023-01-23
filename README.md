@@ -25,7 +25,7 @@ The exercises work as a learning aid to help explore and grasp the concepts intr
 Each laboratory concerns a specific topic. So far, the following topics are covered:
 
 - Table Operators:
-  - Joins
+  - Joins ([Danish](Laboratories/Danish/Joins.ipynb))
   - PIVOT and UNPIVOT
 - Set operators
 - Querying Metadata
