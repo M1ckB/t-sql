@@ -11,7 +11,7 @@ Version 1.0 2023-01-10
 Laboratoriet kræver:
 
 - En understøttet version af SQL Server
-- En Stack Overflow database: https://www.BrentOzar.com/go/querystack
+- En Stack Overflow database: https://www.BrentOzar.com/go/querystack (medium)
 
 Læs mere om set-operatorerne i Microsofts T-SQL reference:
 

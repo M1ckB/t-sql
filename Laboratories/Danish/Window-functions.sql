@@ -11,7 +11,7 @@ Version 1.0 2023-01-11
 Laboratoriet kræver:
 
 - En understøttet version af SQL Server
-- En Stack Overflow database: https://www.BrentOzar.com/go/querystack
+- En Stack Overflow database: https://www.BrentOzar.com/go/querystack (medium)
 
 Læs mere om window funktioner i Microsofts T-SQL reference:
 

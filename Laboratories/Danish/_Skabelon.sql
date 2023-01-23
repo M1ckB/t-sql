@@ -11,7 +11,7 @@ Version 1.0 YYYY-MM-DD
 Laboratoriet kræver:
 
 - En understøttet version af SQL Server
-- En Stack Overflow database: https://www.BrentOzar.com/go/querystack
+- En Stack Overflow database: https://www.BrentOzar.com/go/querystack (medium)
 
 Læs mere om EMNE i Microsofts T-SQL reference:
 
