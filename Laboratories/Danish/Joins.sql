@@ -69,7 +69,7 @@ Id      Displayname       Location  PostTypeId  CreationDate
 
 /*
 
-OPGAVE 4 (valgfri): Kan du opnå samme resultat som i forrige ogpave ved at bruge et CROSS JOIN?
+OPGAVE 4 (valgfri): Kan du opnå samme resultat som i forrige opgave ved at bruge et CROSS JOIN?
 
 */
 

@@ -41,7 +41,7 @@ OPGAVE 1: Hvad er forskellen på UNION og UNION ALL?
 /*
 
 OPGAVE 2 (optional): Nogle gange kan du bruge både FULL OUTER JOIN og UNION ALL til at løse
-  en opgave. Hvornår vælger du UNION/UNION ALL?
+  en opgave. Hvornår vælger du UNION/UNION ALL frem for FULL OUTER JOIN?
 
 */
 
@@ -98,6 +98,11 @@ Id	  DisplayName
 ...
 (79 rows)
 
+*/
+
+/*
+
+OPGAVE 6: ... THOMAS UDFYLDER
 */
 
 /* ***********************
@@ -160,6 +165,31 @@ INTERSECT
 SELECT Id,DisplayName
 FROM dbo.Users
 WHERE UpVotes>10000;
+
+/* OPGAVE 6 */
+
+SELECT TOP (100) *
+INTO #Top100Reps
+FROM dbo.Users
+WHERE [Location] like '%copenhagen%'
+ORDER BY Reputation DESC;
+
+SELECT TOP (100) *
+INTO #Top100Views
+FROM dbo.Users
+WHERE [Location] like '%copenhagen%'
+ORDER BY Views DESC;
+
+SELECT * FROM #Top100Reps
+EXCEPT
+SELECT * FROM #Top100Views;
+
+SELECT * FROM #Top100Views
+EXCEPT
+SELECT * FROM #Top100Reps;
+
+DROP TABLE #Top100Reps;
+DROP TABLE #Top100Views;
 
 /* ***********************
 

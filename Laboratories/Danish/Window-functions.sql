@@ -33,7 +33,7 @@ GO
 /*
 
 OPGAVE 1: Beregn for hver bruger, begrænset til brugerne 14388, 279932, 59711, de enkelte spørgsmåls
-    andel af den samlede FavoriteCount uden brug af window-funktioner? 
+    andel af den samlede FavoriteCount uden brug af window-funktioner.
 
 - Tabeller involveret: dbo.Posts
 - Ønsket output:
