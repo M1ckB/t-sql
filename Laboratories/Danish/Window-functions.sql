@@ -145,11 +145,8 @@ SELECT
     p1.FavoriteCount,
     1.0 * p1.FavoriteCount / SUM(p2.FavoriteCount) AS PctFavoriteCount
 FROM dbo.Posts AS p1
-INNER JOIN dbo.Posts AS p2
-    ON p2.OwnerUserId = p1.OwnerUserId
-    AND p2.PostTypeId = p1.PostTypeId
-WHERE p1.PostTypeId = 1 -- Question
-    AND p1.OwnerUserId IN (14388, 279932, 59711)
+INNER JOIN dbo.Posts AS p2 ON p2.OwnerUserId = p1.OwnerUserId AND p2.PostTypeId = p1.PostTypeId
+WHERE p1.PostTypeId = 1 /* Question */ AND p1.OwnerUserId IN (14388, 279932, 59711)
 GROUP BY p1.Id, p1.OwnerUserId, p1.CreationDate, p1.FavoriteCount
 ORDER BY OwnerUserId, CreationDate, Id;
 
@@ -165,12 +162,10 @@ SELECT
         SELECT
             SUM(p2.FavoriteCount)
         FROM dbo.Posts AS p2
-        WHERE p2.PostTypeId = p1.PostTypeId
-            AND p2.OwnerUserId = p1.OwnerUserId
+        WHERE p2.PostTypeId = p1.PostTypeId AND p2.OwnerUserId = p1.OwnerUserId
     ) AS PctFavoriteCount
 FROM dbo.Posts AS p1
-WHERE p1.PostTypeId = 1 -- Question
-AND p1.OwnerUserId IN (14388, 279932, 59711)
+WHERE p1.PostTypeId = 1 /* Question */ AND p1.OwnerUserId IN (14388, 279932, 59711)
 ORDER BY OwnerUserId, CreationDate, Id;
 
 /* Med en CTE: */
@@ -191,11 +186,8 @@ SELECT
     p1.FavoriteCount,
     1.0 * p1.FavoriteCount / p2.TotalFavoriteCount AS PctFavoriteCount
 FROM dbo.Posts AS p1
-INNER JOIN Total_FavoriteCount AS p2
-    ON p2.PostTypeId = p1.PostTypeId
-    AND p2.OwnerUserId = p1.OwnerUserId
-WHERE p1.PostTypeId = 1 -- Question
-    AND p1.OwnerUserId IN (14388, 279932, 59711)
+INNER JOIN Total_FavoriteCount AS p2 ON p2.PostTypeId = p1.PostTypeId AND p2.OwnerUserId = p1.OwnerUserId
+WHERE p1.PostTypeId = 1 /* Question */ AND p1.OwnerUserId IN (14388, 279932, 59711)
 ORDER BY OwnerUserId, CreationDate, Id;
 
 /* OPGAVE 2 */
@@ -212,12 +204,9 @@ SELECT
     p1.FavoriteCount,
     1 + COUNT(p2.Id) AS RankFavoriteCount
 FROM dbo.Posts AS p1
-LEFT OUTER JOIN dbo.Posts AS p2
-    ON p2.OwnerUserId = p1.OwnerUserId
-    AND p2.PostTypeId = p1.PostTypeId
+LEFT OUTER JOIN dbo.Posts AS p2 ON p2.OwnerUserId = p1.OwnerUserId AND p2.PostTypeId = p1.PostTypeId
     AND p2.FavoriteCount > p1.FavoriteCount
-WHERE p1.PostTypeId = 1 -- Question
-    AND p1.OwnerUserId IN (14388, 279932, 59711)
+WHERE p1.PostTypeId = 1 /* Question */ AND p1.OwnerUserId IN (14388, 279932, 59711)
 GROUP BY p1.Id, p1.OwnerUserId, p1.FavoriteCount
 ORDER BY OwnerUserId, FavoriteCount DESC;
 
@@ -231,13 +220,11 @@ SELECT
         SELECT
             COUNT(*) AS RankFavoriteCount
         FROM dbo.Posts AS p2
-        WHERE p2.PostTypeId = p1.PostTypeId
-            AND p2.OwnerUserId = p1.OwnerUserId
+        WHERE p2.PostTypeId = p1.PostTypeId AND p2.OwnerUserId = p1.OwnerUserId
             AND p2.FavoriteCount > p1.FavoriteCount
     ) + 1 AS RankFavoriteCount
 FROM dbo.Posts AS p1
-WHERE p1.PostTypeId = 1 -- Question
-AND p1.OwnerUserId IN (14388, 279932, 59711)
+WHERE p1.PostTypeId = 1 /* Question */ AND p1.OwnerUserId IN (14388, 279932, 59711)
 ORDER BY OwnerUserId, FavoriteCount DESC;
 
 /* Den sidste løsning er den mest oplagte */
@@ -266,8 +253,7 @@ SELECT
     CreationDate,
     ROW_NUMBER() OVER(ORDER BY ViewCount, CreationDate) AS RowNum
 FROM dbo.Posts
-WHERE PostTypeId = 1 -- Question
-AND OwnerUserId = 214
+WHERE PostTypeId = 1 /* Question */ AND OwnerUserId = 214
 ORDER BY ViewCount, CreationDate;
 
 /* OPGAVE 5 */
@@ -280,8 +266,7 @@ SELECT
     ViewCount,
     ViewCount - LAG(ViewCount, 1, 0) OVER(ORDER BY CreationDate) AS DiffViewCount
 FROM dbo.Posts
-WHERE PostTypeId = 1 -- Question
-AND OwnerUserId = 214
+WHERE PostTypeId = 1 /* Question */ AND OwnerUserId = 214
 ORDER BY CreationDate;
 
 /* OPGAVE 6 */
@@ -298,8 +283,7 @@ SELECT
         ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
     ) AS RunningTotalViewCount
 FROM dbo.Posts
-WHERE PostTypeId = 1 -- Question
-AND OwnerUserId = 214
+WHERE PostTypeId = 1 /*  Question */ AND OwnerUserId = 214
 ORDER BY CreationDate;
 
 /* ***********************

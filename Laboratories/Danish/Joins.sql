@@ -90,7 +90,22 @@ Id	    DisplayName	    Reputation
 
 /*
 
-OPGAVE 6: Returner brugere fra USA og deres indlæg, inklusiv brugere som ingen indlæg har lavet.
+OPGAVE 6: Find svar til spørgsmålet med Id=4 (se evt. https://stackoverflow.com/questions/4/ hvis du er
+  interesseret i spørgsmålet). Sorter resultat-tabellen på aftagende på baggrund af Score.
+
+- Tabeller involveret: dbo.Posts
+- Ønsket output:
+Id	      Body	                    Score
+7	        <p>An explicit cast to... 401
+78	      <p>It sounds like <cod... 54
+86	      <p>A more generic answ... 117
+...
+(13 rows)
+*/
+
+/*
+
+OPGAVE 7: Returner brugere fra USA og deres indlæg, inklusiv brugere som ingen indlæg har lavet.
 
 - Tabeller involveret: dbo.Users, dbo.Posts
 - Ønsket output:
@@ -105,7 +120,7 @@ Id	  DisplayName	    Location	PostTypeId	CreationDate
 
 /*
 
-OPGAVE 7: Returner brugere som ingen indlæg har lavet.
+OPGAVE 8: Returner brugere som ingen indlæg har lavet.
 
 - Tabeller involveret: dbo.Users, dbo.Posts
 - Ønsket output:
@@ -148,8 +163,7 @@ SELECT
   p.PostTypeId,
   p.CreationDate
 FROM dbo.Users AS u
-INNER JOIN dbo.Posts AS p
-  ON p.OwnerUserId = u.Id
+INNER JOIN dbo.Posts AS p ON p.OwnerUserId = u.Id
 WHERE u.[Location] = 'USA';
 -- WHERE u.[Location] LIKE '%USA%';
 
@@ -163,8 +177,7 @@ SELECT
   p.CreationDate
 FROM dbo.Users AS u
 CROSS JOIN dbo.Posts AS p
-WHERE p.OwnerUserId = u.Id
-AND u.[Location] = 'USA';
+WHERE p.OwnerUserId = u.Id AND u.[Location] = 'USA';
 
 /* OPGAVE 5 */
 
@@ -176,13 +189,22 @@ SELECT DISTINCT
   u.DisplayName,
   u.Reputation
 FROM dbo.Users AS u
-INNER JOIN dbo.Badges AS b
-  ON b.UserId = u.Id
---  AND b.Name = 'Teacher'
+INNER JOIN dbo.Badges AS b ON b.UserId = u.Id --  AND b.Name = 'Teacher'
 WHERE b.Name = 'Teacher'
 ORDER BY u.Reputation DESC;
 
 /* OPGAVE 6 */
+
+SELECT
+    a.Id,
+    a.Body,
+    a.Score
+FROM dbo.Posts AS q
+INNER JOIN dbo.Posts AS a ON a.ParentId = q.Id
+WHERE q.Id = 4
+ORDER BY Score DESC;
+
+/* OPGAVE 7 */
 
 SELECT
   u.Id,
@@ -191,19 +213,17 @@ SELECT
   p.PostTypeId,
   p.CreationDate
 FROM dbo.Users AS u
-LEFT OUTER JOIN dbo.Posts AS p
-  ON p.OwnerUserId = u.Id
+LEFT OUTER JOIN dbo.Posts AS p ON p.OwnerUserId = u.Id
 WHERE u.[Location] = 'USA';
 
-/* OPGAVE 7 */
+/* OPGAVE 8 */
 
 SELECT
   u.Id,
   u.DisplayName,
   u.Reputation
 FROM dbo.Users AS u
-LEFT OUTER JOIN dbo.Posts AS p
-  ON p.OwnerUserId = u.Id
+LEFT OUTER JOIN dbo.Posts AS p ON p.OwnerUserId = u.Id
 WHERE p.Id IS NULL;
 
 /* ***********************
