@@ -123,6 +123,7 @@ Aggregeringsfunktionen = AVG()
 */
 
 
+
 /* OPGAVE 2 */
 
 SELECT PostClosedYear,  [User],  [Superuser]
