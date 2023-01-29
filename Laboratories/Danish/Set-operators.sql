@@ -102,8 +102,16 @@ Id	  DisplayName
 
 /*
 
-OPGAVE 6: ... THOMAS UDFYLDER
+OPGAVE 6: 
+6.a Selektér 100 users med højeste reputation hvor 'Copenhagen' indgår i location.
+6.b Selektér 100 users med højeste antal views hvor 'Copenhagen' indgår i location..
+6.c Find users, som indgår i 6.a, men ikke 6.b. 
+6.d Find users, som indgår i 6.b, men ikke 6.a.
+
 */
+
+
+
 
 /* ***********************
 
@@ -126,7 +134,7 @@ LØSNINGER
 
 /* OPGAVE 3 */
 
-/* Med UNION ALL: */
+/* Med UNION: */
 SELECT 1 AS n
 UNION SELECT 2
 UNION SELECT 3
@@ -168,28 +176,34 @@ WHERE UpVotes>10000;
 
 /* OPGAVE 6 */
 
+--6.a
 SELECT TOP (100) *
 INTO #Top100Reps
 FROM dbo.Users
 WHERE [Location] like '%copenhagen%'
 ORDER BY Reputation DESC;
 
+--6.b
 SELECT TOP (100) *
 INTO #Top100Views
 FROM dbo.Users
 WHERE [Location] like '%copenhagen%'
 ORDER BY Views DESC;
 
+--6.c
 SELECT * FROM #Top100Reps
 EXCEPT
 SELECT * FROM #Top100Views;
 
+--6.d
 SELECT * FROM #Top100Views
 EXCEPT
 SELECT * FROM #Top100Reps;
 
 DROP TABLE #Top100Reps;
 DROP TABLE #Top100Views;
+
+
 
 /* ***********************
 
