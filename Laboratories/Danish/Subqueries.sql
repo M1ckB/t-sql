@@ -47,42 +47,44 @@ Id	      CreationDate	          Title
 
 /*
 
-OPGAVE 2: Find brugere som ikke har oprettet nogle indlæg fra 2013 og frem.
+OPGAVE 2: Find brugere som har oprettet et eller flere indlæg i 2009
 
 - Tabeller involveret: dbo.Users og dbo.Posts
 - Ønsket output:
-Id	  DisplayName	    Location
-45095	David DeHaven	  United States
-45097	Gyuri           United States
-45114	Michael Bishop	Northampton, MA
+Id	DisplayName   Location
+5   Jon Galloway	San Diego, CA
+22	Matt MacLean	Calgary, Canada
+23	Jax           Charlotte, NC, United States
 ...
-(1.691.092 rows)
+(81.110 rows)
 
 */
 
 /*
 
-OPGAVE 3: Find ud af hvor mange spørgsmål der ingen kommentarer har.
+OPGAVE 3: Find spørgsmål der ingen kommentarer har.
 
 - Tabeller involveret: dbo.Posts og dbo.Comments
 - Ønsket output:
-CountQuestionsWithNoComments
-2901362
-(1 row)
+Id	CreationDate	          Title
+6	  2008-07-31 22.08.08.620	Percentage width...
+24	2008-08-01 12.12.19.350	Throw an error i...
+25	2008-08-01 12.13.50.207	How to use the C...
+(2.901.362 rows)
 
 */
 
 /*
 
-OPGAVE 4: Find for hver bruger indlæg fra den sidste dag hvor brugeren har lavet indlæg.
+OPGAVE 4: Find, for hver bruger, brugerens seneste spørgsmål.
 - Tabeller involveret: dbo.Posts
 - Ønsket output:
-Id	  OwnerUserId	CreationDate	          Title
-9932	1217	      2008-08-13 15.16.50.713	What is a good way...
-17870	2116	      2008-08-20 12.58.51.513	Select ..... where...
-16402	652	        2008-08-19 15.26.40.287	Easy installation ...
+Id	    OwnerUserId	CreationDate	          Title
+139867	12531	      2008-09-26 14.26.34.780	Is there an open source...
+136098	16175	      2008-09-25 21.02.02.477	Grails 1.0.3 console re...
+129451	5412	      2008-09-24 19.50.24.840	JavaScript or Java Stri...
 ...
-(923.499 rows)
+(1.087.409 rows)
 
 */
 
@@ -129,16 +131,19 @@ SELECT
   DisplayName,
   [Location]
 FROM dbo.Users
-WHERE Id NOT IN (
+WHERE Id IN (
   SELECT OwnerUserId
   FROM dbo.Posts
-  WHERE CreationDate >= CAST('2013-01-01' AS datetime)
+  WHERE CreationDate >= CAST('2009-01-01' AS datetime)
+  AND CreationDate < CAST('2010-01-01' AS datetime)
 );
 
 /* OPGAVE 3 */
 
 SELECT
-  COUNT(*) AS CountQuestionsWithNoComments
+  Id,
+  CreationDate,
+  Title
 FROM dbo.Posts
 WHERE PostTypeId = 1 /* Question */
 AND Id NOT IN (
@@ -154,10 +159,11 @@ SELECT
   CreationDate,
   Title
 FROM dbo.Posts AS p1
-WHERE CAST(CreationDate AS date) = (
-  SELECT CAST(MAX(CreationDate) AS date)
+WHERE Id = (
+  SELECT MAX(Id)
   FROM dbo.Posts AS p2
   WHERE p2.OwnerUserId = p1.OwnerUserId
+  AND p2.PostTypeId = 1 /* Question */
 );
 
 /* OPGAVE 5 */
@@ -168,18 +174,16 @@ SELECT
   [Location]
 FROM dbo.Users AS u
 WHERE EXISTS (
-  /* Answers provided */
   SELECT *
   FROM dbo.Posts AS p
   WHERE p.OwnerUserId = u.Id
-  AND p.PostTypeId = 2
+  AND p.PostTypeId = 2 /* Answer */
 )
 AND NOT EXISTS (
-  /*  Questions asked */
   SELECT *
   FROM dbo.Posts AS p
   WHERE p.OwnerUserId = u.Id
-  AND p.PostTypeId = 1
+  AND p.PostTypeId = 1 /* Question */
 );
 
 /* OPGAVE 6 */
