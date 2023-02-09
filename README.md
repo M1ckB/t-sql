@@ -24,23 +24,19 @@ The exercises work as a learning aid to help explore and grasp the concepts intr
 
 Each laboratory concerns a specific topic. So far, the following topics are covered:
 
+- Single-table queries
 - Table Operators:
   - Joins ([Danish](Laboratories/Danish/Joins.ipynb))
   - PIVOT and UNPIVOT ([Danish](Laboratories/Danish/PIVOT-and-UNPIVOT.ipynb))
 - Set operators ([Danish](Laboratories/Danish/Set-operators.ipynb))
-- Querying Metadata
+- Querying Metadata ([Danish](Laboratories/Danish/Querying-metadata.ipynb))
 - Subqueries ([Danish](Laboratories/Danish/Subqueries.ipynb))
 - Table Expressions:
-  - Derived Table
+  - Derived Table ([Danish](Laboratories/Danish/Derived-tables.ipynb))
   - Common Table Expression (CTE) ([Danish](Laboratories/Danish/CTE.ipynb))
-  - View
+  - View ([Danish](Laboratories/Danish/Views.ipynb))
+  - Temporary Table ([Danish](Laboratories/Danish/Temporary-table.ipynb))
 - Window Functions ([Danish](Laboratories/Danish/Window-functions.ipynb))
-- Programmable Objects:
-  - Batches and Control-of-Flow
-  - Dynamic SQL
-  - Temporary Table
-  - Routines
-  - Error Handling
 
 ## Credits
 

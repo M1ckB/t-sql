@@ -1,6 +1,6 @@
 /* ***********************
 
-PIVOT og UNPIVOT
+PIVOT OG UNPIVOT
 
 Udviklet af Thomas Lange & Mick Ahlmann Brun
 

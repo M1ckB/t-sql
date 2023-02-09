@@ -1,6 +1,6 @@
 /* ***********************
 
-CTE (Common Table Expression)
+CTE (COMMON TABLE EXPRESSIONS)
 
 Udviklet af Thomas Lange & Mick Ahlmann Brun
 

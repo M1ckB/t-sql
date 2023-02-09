@@ -1,6 +1,6 @@
 /* ***********************
 
-Derived Tables
+VIEWS
 
 Udviklet af Thomas Lange & Mick Ahlmann Brun
 
@@ -13,9 +13,9 @@ Laboratoriet kræver:
 - En understøttet version af SQL Server
 - En Stack Overflow database: https://www.BrentOzar.com/go/querystack (medium)
 
-Læs mere om derived tables i Microsofts T-SQL reference:
+Læs mere om views i Microsofts T-SQL reference:
 
-- https://learn.microsoft.com/en-us/sql/relational-databases/performance/subqueries?view=sql-server-ver16
+- https://learn.microsoft.com/en-us/sql/relational-databases/views/views
 
 Du kan finde løsninger og svar på opgaverne nederst i scriptet.
 
@@ -31,7 +31,7 @@ GO
 *********************** */
 
 /* 
-I en tidligere lab, skulle du finde brugere i StackOverflow-databasen, som ingen indlæg har lavet.
+I et tidligere laboratorium, skulle du finde brugere i StackOverflow-databasen, som ingen indlæg har lavet.
 
 - Tabeller involveret: dbo.Users, dbo.Posts
 - Ønsket output:
@@ -43,7 +43,9 @@ Id	    DisplayName	            Reputation
 (1.030.987 rows)
 
 Et godt svar på denne opgave var scriptet her:
+
 */
+
 SELECT
   u.Id,
   u.DisplayName,
@@ -51,10 +53,14 @@ SELECT
 FROM dbo.Users AS u
 LEFT OUTER JOIN dbo.Posts AS p ON p.OwnerUserId = u.Id
 WHERE p.Id IS NULL;
+GO
 
 /*
 
-OPGAVE 1: Lav et view, som indeholder scriptet. Navngiv viewet, så det afspejler indholdet (enten i dit eget schema eller med dit eget navn som del af viewets navn).
+OPGAVE 1: Lav et view, som indeholder scriptet. Navngiv viewet, så det afspejler indholdet (enten i dit
+  eget skema eller med dit eget navn som del af viewets navn).
+TIP: Det er ofte et krav at Data Definition Language (DDL) står alene i et batch, så husk at afslutte dine
+  statements med GO.
 
 */
 
@@ -63,10 +69,12 @@ OPGAVE 1: Lav et view, som indeholder scriptet. Navngiv viewet, så det afspejle
 OPGAVE 2: Lav et nyt script, som ændrer viewet, så
     - Kolonnenavnene ændres til UserId, UserName og UserRepution.
     - Viewet indeholder alle brugere, både bruger med og uden indlæg. 
-    - Viewet kun viser én linje pr. bruger og der tilføjes en kolonne, UserNumberOfPosts, som viser antal indlæg, brugeren har haft i alt. 
+    - Viewet kun viser én linje pr. bruger og der tilføjes en kolonne, UserNumberOfPosts, som viser antal
+      indlæg, brugeren har haft i alt. 
 
 
-Når du laver SELECT * FROM <ditview>, sorteret med faldende antal UserNumberOfPosts, er følgende output ønsket:
+Når du laver SELECT * FROM <ditview>, sorteret med faldende antal UserNumberOfPosts, er følgende output
+  ønsket:
 UserId	UserName	UserReputation	UserNumberOfPosts
 9073	Chris Smith	4068	        81
 9082	wallyqs	    2483	        25
@@ -91,7 +99,6 @@ LØSNINGER
 *********************** */
 
 /* OPGAVE 1 */
-GO
 CREATE VIEW _minbruger_vUsersActivity AS
 SELECT
   u.Id,
@@ -103,7 +110,6 @@ WHERE p.Id IS NULL;
 GO
 
 /* OPGAVE 2 */
-GO 
 ALTER VIEW _minbruger_vUsersActivity AS
 SELECT
   u.Id AS UserId,
@@ -117,7 +123,6 @@ ORDER BY UserNumberOfPosts DESC;
 GO
 
 /* OPGAVE 3 */
-GO 
 DROP VIEW _minbruger_vUsersActivity;
 GO
 
