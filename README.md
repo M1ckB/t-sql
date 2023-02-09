@@ -35,7 +35,7 @@ Each laboratory concerns a specific topic. So far, the following topics are cove
   - Derived Table ([Danish](Laboratories/Danish/Derived-tables.ipynb))
   - Common Table Expression (CTE) ([Danish](Laboratories/Danish/CTE.ipynb))
   - View ([Danish](Laboratories/Danish/Views.ipynb))
-  - Temporary Table ([Danish](Laboratories/Danish/Temporary-tables.ipynb))
+  - Temporary Tables ([Danish](Laboratories/Danish/Temporary-tables.ipynb))
 - Window Functions ([Danish](Laboratories/Danish/Window-functions.ipynb))
 
 ## Credits
