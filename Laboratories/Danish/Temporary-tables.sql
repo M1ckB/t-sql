@@ -32,16 +32,35 @@ GO
 
 /* 
 
-OPGAVE 1: X
+OPGAVE 1.1: Find Id for de tre brugere med det højeste omdømme og
+  gem resultatet som en midlertidig tabel.
 
-- Tabeller involveret:
+- Tabeller involveret: dbo.Users
 - Ønsket output:
-<
-cols
-content
-...
-(X rows)
->
+Id
+22656
+157882
+29407
+
+*/
+
+/* 
+
+OPGAVE 1.2: Byg videre på forrige opgave. Indhent oplysninger om brugerne
+  listet i den midlertidige tabel.
+
+- Tabeller involveret: dbo.Users
+- Ønsket output:
+Id	    DisplayName	    Location	              CreationDate
+22656	  Jon Skeet	      Reading, United Kingdom	2008-09-26 12.05.05.150
+29407	  Darin Dimitrov	Sofia, Bulgaria	        2008-10-19 16.07.47.823
+157882	BalusC	        Willemstad, Curaçao	    2009-08-17 16.42.02.403
+
+*/
+
+/*
+
+OPGAVE 1.3: Slet din midlertidige tabel.
 
 */
 
@@ -51,7 +70,29 @@ LØSNINGER
 
 *********************** */
 
-/* OPGAVE 1 */
+/* OPGAVE 1.1 */
+
+SELECT TOP (3)
+  Id
+INTO #UsersWithHighRep
+FROM dbo.Users
+ORDER BY Reputation DESC;
+
+SELECT * FROM #UsersWithHighRep;
+
+/* OPGAVE 1.2 */
+
+SELECT
+  Id,
+  DisplayName,
+  [Location],
+  CreationDate
+FROM dbo.Users
+WHERE Id IN (SELECT Id FROM #UsersWithHighRep);
+
+/* OPGAVE 1.3 */
+
+DROP TABLE #UsersWithHighRep;
 
 /* ***********************
 
